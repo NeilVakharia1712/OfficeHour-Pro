@@ -14,9 +14,11 @@ const CourseList = props => {
         if (props.user) {
             const userDb = db.child('Users/' + props.user.uid);
             userDb.once('value').then(snapshot => {
+                console.log("The database returns: " + snapshot)
                 setCourse(snapshot.val().courses)
             })
         }
+        // eslint-disable-next-line
     }, [props.user])
 
     useEffect(() => {
@@ -25,7 +27,7 @@ const CourseList = props => {
         }
         const courseDb = db.child('courses')
         courseDb.once("value", getCourseInfo, error => alert(error));
-    }, [])
+    })
     
     if (props.user && schedule) {
         return (
