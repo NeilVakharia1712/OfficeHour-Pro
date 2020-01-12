@@ -1,28 +1,20 @@
 import React from 'react';
 import firebase from 'firebase/app'
 import 'firebase/auth';
-import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
+import { Button } from '@material-ui/core';
 
 const SignIn = () => (
-	<StyledFirebaseAuth
-		uiConfig={uiConfig}
-		firebaseAuth={firebase.auth()}
-	/>
+    <Button style={{color: 'white'}} onClick={() => {SignInWithGoogle()}}>Sign In</Button>
 );
 
 const SignOut = () => {
     firebase.auth().signOut()
 }
 
-const uiConfig = {
-	signInFlow: 'popup',
-	signInOptions: [
-		firebase.auth.GoogleAuthProvider.PROVIDER_ID
-	],
-	callbacks: {
-		signInSuccessWithAuthResult: () => false
-	}
-};
+const SignInWithGoogle = () => {
+    let provider = new firebase.auth.GoogleAuthProvider();
+    firebase.auth().signInWithRedirect(provider);
+}
 
 export default SignIn;
 export {SignOut, SignIn};

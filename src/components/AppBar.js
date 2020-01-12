@@ -1,14 +1,8 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
 import PropTypes from 'prop-types';
-import Typography from '@material-ui/core/Typography';
-import useScrollTrigger from '@material-ui/core/useScrollTrigger';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import IconButton from '@material-ui/core/IconButton';
+import {AppBar, Toolbar, Typography,useScrollTrigger,CssBaseline,IconButton,Avatar} from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
-import Avatar from '@material-ui/core/Avatar';
 import { SignIn } from './Login'
 import SimplePopover from './Popover'
 
@@ -63,7 +57,7 @@ const ButtonAppBar = (props) => {
                         <Typography variant="h6" className={classes.title}>
                             OfficeHours Pro
                     </Typography>
-                        {props.user ? <SimplePopover><Avatar src={props.user.photoURL} /></SimplePopover> : <SignIn />}
+                    {props.user ? <SimplePopover><Avatar src={props.user.photoURL} /></SimplePopover> : <SignIn />}
                     </Toolbar>
                 </AppBar>
             </ElevationScroll>

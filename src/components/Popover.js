@@ -12,7 +12,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 // Props
-const SimplePopover = props => {
+const SimplePopover = (props) => {
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = React.useState(null);
 

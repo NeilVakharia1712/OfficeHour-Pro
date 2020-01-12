@@ -1,0 +1,146 @@
+{
+    "Users": {
+        "ncWok29iAaaa4xbl2kA5IR7qwau1": {
+            "courses": [
+                "F101",
+                "F348",
+                "F349",
+                "F396-4"
+            ]
+        }
+    },
+    "courses": {
+        "F101": {
+            "id": "F101",
+            "officeHours": [
+                {
+                    "endTime": "12:00",
+                    "startTime": "11:00",
+                    "weekDay": "mo",
+                    "checkInUsers": [],
+                    "questions": [],
+                    "desiredCapacity": 20
+                },
+                {
+                    "endTime": "15:00",
+                    "startTime": "17:00",
+                    "weekDay": "th",
+                    "checkInUsers": [],
+                    "questions": [],
+                    "desiredCapacity": 20
+                }
+            ],
+            "title": "Computer Science: Concepts, Philosophy, and Connections"
+        },
+        "F348": {
+            "id": "F348",
+            "officeHours": [
+                {
+                    "endTime": "12:00",
+                    "startTime": "11:00",
+                    "weekDay": "mo",
+                    "checkInUsers": [],
+                    "questions": [],
+                    "desiredCapacity": 20
+                },
+                {
+                    "endTime": "15:00",
+                    "startTime": "17:00",
+                    "weekDay": "th",
+                    "checkInUsers": [],
+                    "questions": [],
+                    "desiredCapacity": 20
+                }
+            ],
+            "title": "AI"
+        },
+        "F349": {
+            "id": "F349",
+            "officeHours": [
+                {
+                    "endTime": "12:00",
+                    "startTime": "11:00",
+                    "weekDay": "mo",
+                    "checkInUsers": [],
+                    "questions": [],
+                    "desiredCapacity": 20
+                },
+                {
+                    "endTime": "15:00",
+                    "startTime": "17:00",
+                    "weekDay": "th",
+                    "checkInUsers": [],
+                    "questions": [],
+                    "desiredCapacity": 20
+                }
+            ],
+            "title": "ML"
+        },
+        "F354": {
+            "id": "F354",
+            "officeHours": [
+                {
+                    "endTime": "12:00",
+                    "startTime": "11:00",
+                    "weekDay": "mo",
+                    "checkInUsers": [],
+                    "questions": [],
+                    "desiredCapacity": 20
+                },
+                {
+                    "endTime": "15:00",
+                    "startTime": "17:00",
+                    "weekDay": "th",
+                    "checkInUsers": [],
+                    "questions": [],
+                    "desiredCapacity": 20
+                }
+            ],
+            "title": "Network Penetration and Security"
+        },
+        "F376": {
+            "id": "F376",
+            "officeHours": [
+                {
+                    "endTime": "12:00",
+                    "startTime": "11:00",
+                    "weekDay": "mo",
+                    "checkInUsers": [],
+                    "questions": [],
+                    "desiredCapacity": 20
+                },
+                {
+                    "endTime": "15:00",
+                    "startTime": "17:00",
+                    "weekDay": "th",
+                    "checkInUsers": [],
+                    "questions": [],
+                    "desiredCapacity": 20
+                }
+            ],
+            "title": "Game Design and Development"
+        },
+        "W396-4": {
+            "id": "W396-4",
+            "officeHours": [
+                {
+                    "endTime": "12:00",
+                    "startTime": "11:00",
+                    "weekDay": "mo",
+                    "checkInUsers": [],
+                    "questions": [],
+                    "desiredCapacity": 20
+                },
+                {
+                    "endTime": "15:00",
+                    "startTime": "17:00",
+                    "weekDay": "th",
+                    "checkInUsers": [],
+                    "questions": [],
+                    "desiredCapacity": 20
+                }
+            ],
+            "title": "Programming Language Seminar"
+        }
+    }
+}

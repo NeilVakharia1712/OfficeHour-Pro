@@ -26,7 +26,7 @@ const CourseList = props => {
         const courseDb = db.child('courses')
         courseDb.once("value", getCourseInfo, error => alert(error));
     }, [])
-    console.log(schedule)
+    
     if (props.user && schedule) {
         return (
             <Grid container spacing={1}>
@@ -34,7 +34,7 @@ const CourseList = props => {
                     console.log(course)
                     return(
                     <Grid key={course} item xs={12}>
-                        <CourseCard courseNumber={course}  courseName={schedule[course]['title']}/>
+                        <CourseCard courseNumber={course} courseName={schedule[course]['title']} user={props.user}/>
                     </Grid>)
                 })
                 }
