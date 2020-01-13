@@ -29,23 +29,38 @@ const useStyles = makeStyles({
 const CheckIn = (user, courseName, courseNumber) => {
 
   const db = firebase.database();
-  console.log(user.uid);
-  console.log(courseName); 
+  //console.log(user.uid);
+  //console.log(courseName); 
   const CheckedInUser = firebase.database().ref('courses/' + courseNumber + '/officeHours');
   CheckedInUser.on('value', function(snapshot){
-    console.log(snapshot.val());
+    //console.log(snapshot.val());
   });
-  console.log(CheckedInUser); 
+  //console.log(CheckedInUser); 
 
   firebase.database().ref('courses/' + courseNumber + '/officeHours').update({
     [user.uid]: user.uid
   })
-  
+
+  //Number Of Students
+  const ref = firebase.database().ref('courses/' + courseNumber + '/officeHours');
+  ref.once("value").then(function (snapshot){
+    const count  = snapshot.numChildren(); 
+    console.log(count-2); //subtract 2 becasue currently we have only 2 office hour slots
+  }); 
+   
+
 }
 
 const CheckOut = (user, courseName, courseNumber) => {
 
   firebase.database().ref('courses/' + courseNumber + '/officeHours').child(user.uid).remove(); 
+  //Count Number Of Students
+  const ref = firebase.database().ref('courses/' + courseNumber + '/officeHours');
+  ref.once("value").then(function (snapshot){
+    const count  = snapshot.numChildren(); 
+    console.log(count-2); 
+  }); 
+  
 
 }
 
