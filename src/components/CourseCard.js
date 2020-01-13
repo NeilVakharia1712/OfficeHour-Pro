@@ -7,6 +7,7 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import 'firebase/database';
 import firebase from 'firebase/app';
+import OngoingOfficeHours from './OngoingOfficeHours';
 
 const useStyles = makeStyles({
   card: {
@@ -25,44 +26,41 @@ const useStyles = makeStyles({
   },
 });
 
-const CheckIn = (props) => {
+const CheckIn = (user, courseName, courseNumber) => {
 
   const db = firebase.database();
-  console.log(props.user.uid);
-  console.log(props.courseName); 
-  const CheckedInUser = firebase.database().ref('courses/' + props.courseNumber + '/officeHours');
+  console.log(user.uid);
+  console.log(courseName); 
+  const CheckedInUser = firebase.database().ref('courses/' + courseNumber + '/officeHours');
   CheckedInUser.on('value', function(snapshot){
     console.log(snapshot.val());
   });
   console.log(CheckedInUser); 
 
-  firebase.database().ref('courses/' + props.courseNumber + '/officeHours').update({
-    [props.user.uid]: props.user.uid
+  firebase.database().ref('courses/' + courseNumber + '/officeHours').update({
+    [user.uid]: user.uid
   })
 
   
 }
 
-const CourseCard = props => {
+const CourseCard = ({user, courseName, courseNumber, officeHours}) => {
   const classes = useStyles();
 
   return (
     <Card className={classes.card}>
       <CardContent>
         <Typography variant="h5" component="h2">
-          {props.courseNumber}
+          {courseNumber}
         </Typography>
         <Typography className={classes.pos} color="textSecondary">
-          {props.courseName}
+          {courseName}
         </Typography>
-        <Typography variant="body2" component="p">
-          Incomming office hour: Jan 28 7:00 P.M.
-        </Typography>
-
+        <OngoingOfficeHours courseNumber={courseNumber} officeHours={officeHours} />
       </CardContent>
       <CardActions>
         <Button size="small">Learn More</Button>
-        <Button onClick={()=>{CheckIn(props)}} color="secondary" size="small">Check in</Button>
+        <Button onClick={()=>{CheckIn(user, courseName, courseNumber)}} color="secondary" size="small">Check in</Button>
       </CardActions>
     </Card>
   );

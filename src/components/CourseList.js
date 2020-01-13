@@ -6,18 +6,18 @@ import CourseCard from './CourseCard';
 
 
 
-const CourseList = props => {
+const CourseList = ({ user }) => {
     const db = firebase.database().ref();
     const [schedule, setSchedule] = useState(null);
     const [courses, setCourse] = useState([]);
     useEffect(() => {
-        if (props.user) {
-            const userDb = db.child('Users/' + props.user.uid);
+        if (user) {
+            const userDb = db.child('Users/' + user.uid);
             userDb.once('value').then(snapshot => {
                 setCourse(snapshot.val().courses)
             })
         }
-    }, [props.user])
+    }, [user])
 
     useEffect(() => {
         const getCourseInfo = snapshot => {
@@ -27,14 +27,14 @@ const CourseList = props => {
         courseDb.once("value", getCourseInfo, error => alert(error));
     }, [])
     
-    if (props.user && schedule) {
+    if (user && schedule) {
         return (
             <Grid container spacing={1}>
                 {courses.map(course => {
                     console.log(course)
                     return(
                     <Grid key={course} item xs={12}>
-                        <CourseCard courseNumber={course} courseName={schedule[course]['title']} user={props.user}/>
+                        <CourseCard courseNumber={course} courseName={schedule[course]['title']} officeHours={schedule[course]['officeHours']} user={user}/>
                     </Grid>)
                 })
                 }
