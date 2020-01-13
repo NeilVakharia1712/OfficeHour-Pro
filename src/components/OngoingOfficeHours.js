@@ -30,6 +30,8 @@ const convertDayOfWeekStrToNum = day => {
   }
 };
 
+
+
 export const areOHOngoing = (courseNumber, officeHours) => {
   const [day, hour, minute] = getCurrentTime();
   const sessions = Object.values(officeHours).filter(

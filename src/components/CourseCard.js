@@ -40,8 +40,13 @@ const CheckIn = (user, courseName, courseNumber) => {
   firebase.database().ref('courses/' + courseNumber + '/officeHours').update({
     [user.uid]: user.uid
   })
-
   
+}
+
+const CheckOut = (user, courseName, courseNumber) => {
+
+  firebase.database().ref('courses/' + courseNumber + '/officeHours').child(user.uid).remove(); 
+
 }
 
 const CourseCard = ({user, courseName, courseNumber, officeHours}) => {
@@ -61,6 +66,7 @@ const CourseCard = ({user, courseName, courseNumber, officeHours}) => {
       <CardActions>
         <Button size="small">Learn More</Button>
         <Button onClick={()=>{CheckIn(user, courseName, courseNumber)}} color="secondary" size="small">Check in</Button>
+        <Button onClick={()=>{CheckOut(user, courseName, courseNumber)}} color="secondary" size="small">Check Out</Button>
       </CardActions>
     </Card>
   );
