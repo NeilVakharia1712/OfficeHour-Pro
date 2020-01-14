@@ -106,7 +106,7 @@ const CourseCard = ({ user, courseName, courseNumber, officeHours, isCheckedIn }
         />
       </CardContent>
       <CardActions>
-        <Button size="small">Learn More</Button>
+        {/* <Button size="small">Learn More</Button> // TO DO make this button functional */}
         <Button
           variant="outlined"
           color="secondary"
