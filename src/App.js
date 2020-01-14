@@ -4,6 +4,7 @@ import firebase from 'firebase/app';
 import 'firebase/database';
 import ButtonAppBar from './components/AppBar';
 import CourseList from './components/CourseList';
+import './App.css';
 
 const firebaseConfig = {
 	apiKey: "AIzaSyD4Ph2v9VLa0EkAcyVNVV4D31xTc6z7cak",

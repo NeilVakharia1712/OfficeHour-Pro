@@ -13,8 +13,8 @@ const SignOut = () => {
 
 const SignInWithGoogle = () => {
     let provider = new firebase.auth.GoogleAuthProvider();
-    firebase.auth().signInWithRedirect(provider);
+    firebase.auth().signInWithPopup(provider);
 }
 
 export default SignIn;
-export {SignOut, SignIn};
+export {SignOut, SignIn, SignInWithGoogle};

@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from 'react'
 import firebase from 'firebase/app';
 import 'firebase/database';
-import Grid from '@material-ui/core/Grid';
+import { Grid, Button } from '@material-ui/core';
 import CourseCard from './CourseCard';
+import { SignInWithGoogle } from './Login'
 
-
-
-const CourseList = props => {
+const CourseList = ({ user }) => {
     const db = firebase.database().ref();
     const [schedule, setSchedule] = useState(null);
     const [courses, setCourse] = useState([]);
+    const [checkedInCourse, setCheckedInCourse] = useState(null);
+
     useEffect(() => {
-        if (props.user) {
-            const userDb = db.child('Users/' + props.user.uid);
+        if (user) {
+            const userDb = db.child('Users/' + user.uid);
             userDb.once('value').then(snapshot => {
                 console.log("The database returns: " + snapshot)
                 if (snapshot.val()) {
@@ -21,7 +22,7 @@ const CourseList = props => {
             })
         }
         // eslint-disable-next-line
-    }, [props.user])
+    }, [user])
 
     useEffect(() => {
         const getCourseInfo = snapshot => {
@@ -29,29 +30,38 @@ const CourseList = props => {
         }
         const courseDb = db.child('courses')
         courseDb.once("value", getCourseInfo, error => alert(error));
-    })
+        // eslint-disable-next-line
+    }, [])
 
-    if (props.user && schedule) {
+    if (user && schedule) {
+        const userDb = db.child('Users/' + user.uid);
+        userDb.once("value").then((snapshot) => {
+            setCheckedInCourse(snapshot.val().checkedInCourse);
+        });
+
         return (
             <Grid container spacing={1}>
                 {courses.map(course => {
-                    console.log(course)
-                    return (
-                        <Grid key={course} item xs={12}>
-                            <CourseCard courseNumber={course} courseName={schedule[course]['title']} user={props.user} />
-                        </Grid>)
+                    return(
+                    <Grid key={course} item xs={12}>
+                        <CourseCard
+                            courseNumber={course}
+                            courseName={schedule[course]['title']}
+                            officeHours={schedule[course]['officeHours']}
+                            user={user}
+                            isCheckedIn={course === checkedInCourse}/>
+                    </Grid>)
                 })
                 }
             </Grid>
         )
     } else {
-        if (props.user) {
-            return (<p>{props.user.uid}</p>)
-        } else {
-            return (
-                <p>Please Sign in</p>
-            )
-        }
+        return (
+            <div className="content">
+                <p className="notification">Please Sign in to see the course list</p>
+                <Button variant="contained" color="primary" onClick={() => {SignInWithGoogle()}}>Sign In</Button>
+            </div>
+        )
     }
 }
 
