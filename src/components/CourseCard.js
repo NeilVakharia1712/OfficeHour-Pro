@@ -37,20 +37,13 @@ const toggleCheckInOut = (
   setCheckInText
 ) => {
   if (checkInText == "Check in") {
-    const db = firebase.database();
-    //console.log(user.uid);
-    //console.log(courseName);
     const CheckedInUser = firebase
       .database()
-      .ref("courses/" + courseNumber + "/officeHours");
-    CheckedInUser.on("value", function(snapshot) {
-      //console.log(snapshot.val());
-    });
-    //console.log(CheckedInUser);
+      .ref("courses/" + courseNumber + "/officeHours/CheckedInUsers");
 
     firebase
       .database()
-      .ref("courses/" + courseNumber + "/officeHours")
+      .ref("courses/" + courseNumber + "/officeHours/CheckedInUsers")
       .update({
         [user.uid]: user.uid
       });
@@ -58,26 +51,27 @@ const toggleCheckInOut = (
     //Number Of Students
     const ref = firebase
       .database()
-      .ref("courses/" + courseNumber + "/officeHours");
-    ref.once("value").then(function(snapshot) {
+      .ref("courses/" + courseNumber + "/officeHours/CheckedInUsers");
+    ref.once("value").then((snapshot) => {
       const count = snapshot.numChildren();
-      console.log(count - 2); //subtract 2 becasue currently we have only 2 office hour slots
+      console.log(count);
     });
 
     setCheckInText("Check out");
   } else if (checkInText == "Check out") {
     firebase
       .database()
-      .ref("courses/" + courseNumber + "/officeHours")
+      .ref("courses/" + courseNumber + "/officeHours/CheckedInUsers")
       .child(user.uid)
       .remove();
+
     //Count Number Of Students
     const ref = firebase
       .database()
-      .ref("courses/" + courseNumber + "/officeHours");
-    ref.once("value").then(function(snapshot) {
+      .ref("courses/" + courseNumber + "/officeHours/CheckedInUsers");
+    ref.once("value").then((snapshot) => {
       const count = snapshot.numChildren();
-      console.log(count - 2);
+      console.log(count);
     });
 
     setCheckInText("Check in");
