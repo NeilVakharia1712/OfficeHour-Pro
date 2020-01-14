@@ -17,4 +17,4 @@ const SignInWithGoogle = () => {
 }
 
 export default SignIn;
-export {SignOut, SignIn};
+export {SignOut, SignIn, SignInWithGoogle};

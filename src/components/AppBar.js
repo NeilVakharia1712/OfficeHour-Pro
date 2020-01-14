@@ -1,10 +1,11 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import {AppBar, Toolbar, Typography,useScrollTrigger,CssBaseline,IconButton,Avatar} from '@material-ui/core';
+import { AppBar, Toolbar, Typography, useScrollTrigger, CssBaseline, IconButton, Avatar} from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import { SignIn } from './Login'
 import SimplePopover from './Popover'
+import '../App.css';
 
 const ElevationScroll = props => {
     const { children, window } = props;

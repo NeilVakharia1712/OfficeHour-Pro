@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import firebase from 'firebase/app';
 import 'firebase/database';
-import Grid from '@material-ui/core/Grid';
+import { Grid, Button } from '@material-ui/core';
 import CourseCard from './CourseCard';
-
-
+import { SignInWithGoogle } from './Login'
 
 const CourseList = ({ user }) => {
     const db = firebase.database().ref();
@@ -26,7 +25,7 @@ const CourseList = ({ user }) => {
         const courseDb = db.child('courses')
         courseDb.once("value", getCourseInfo, error => alert(error));
     }, [])
-    
+
     if (user && schedule) {
         return (
             <Grid container spacing={1}>
@@ -42,7 +41,10 @@ const CourseList = ({ user }) => {
         )
     } else {
         return (
-            <p>Please Sign in</p>
+            <div class='content'>
+                <p class='notification'>Please Sign in to see the course list</p>
+                <Button variant="contained" color="primary" onClick={() => {SignInWithGoogle()}}>Sign In</Button>
+            </div>
         )
     }
 }

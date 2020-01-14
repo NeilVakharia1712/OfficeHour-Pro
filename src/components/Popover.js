@@ -1,8 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Popover from '@material-ui/core/Popover';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
+import { Popover, Typography, Button } from '@material-ui/core';
 import { SignOut } from './Login';
 
 const useStyles = makeStyles(theme => ({
@@ -46,7 +44,7 @@ const SimplePopover = (props) => {
                     horizontal: 'center',
                 }}
             >
-                <Typography className={classes.typography}><Button onClick={SignOut}>Log out</Button></Typography>
+                <Typography className={classes.typography}><Button onClick={SignOut}>Sign out</Button></Typography>
             </Popover>
         </div>
     );
