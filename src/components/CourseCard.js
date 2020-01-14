@@ -36,16 +36,19 @@ const toggleCheckInOut = (
   checkInText,
   setCheckInText
 ) => {
-  if (checkInText == "Check in") {
-    const CheckedInUser = firebase
-      .database()
-      .ref("courses/" + courseNumber + "/officeHours/CheckedInUsers");
-
+  if (checkInText === "Check in") {
     firebase
       .database()
       .ref("courses/" + courseNumber + "/officeHours/CheckedInUsers")
       .update({
         [user.uid]: user.uid
+      });
+
+      firebase
+      .database()
+      .ref("Users/" + user.uid)
+      .update({
+        checkedInCourse: courseNumber
       });
 
     //Number Of Students
@@ -58,11 +61,17 @@ const toggleCheckInOut = (
     });
 
     setCheckInText("Check out");
-  } else if (checkInText == "Check out") {
+  } else if (checkInText === "Check out") {
     firebase
       .database()
       .ref("courses/" + courseNumber + "/officeHours/CheckedInUsers")
       .child(user.uid)
+      .remove();
+
+    firebase
+      .database()
+      .ref("Users/" + user.uid)
+      .child('checkedInCourse')
       .remove();
 
     //Count Number Of Students
@@ -78,9 +87,9 @@ const toggleCheckInOut = (
   }
 };
 
-const CourseCard = ({ user, courseName, courseNumber, officeHours }) => {
+const CourseCard = ({ user, courseName, courseNumber, officeHours, isCheckedIn }) => {
   const classes = useStyles();
-  const [checkInText, setCheckInText] = useState("Check in");
+  const [checkInText, setCheckInText] = useState(isCheckedIn ? "Check out" : "Check in");
 
   return (
     <Card className={classes.card}>
