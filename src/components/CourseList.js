@@ -15,7 +15,9 @@ const CourseList = props => {
             const userDb = db.child('Users/' + props.user.uid);
             userDb.once('value').then(snapshot => {
                 console.log("The database returns: " + snapshot)
-                setCourse(snapshot.val().courses)
+                if (snapshot.val()) {
+                    setCourse(snapshot.val().courses)
+                }
             })
         }
         // eslint-disable-next-line
@@ -28,24 +30,28 @@ const CourseList = props => {
         const courseDb = db.child('courses')
         courseDb.once("value", getCourseInfo, error => alert(error));
     })
-    
+
     if (props.user && schedule) {
         return (
             <Grid container spacing={1}>
                 {courses.map(course => {
                     console.log(course)
-                    return(
-                    <Grid key={course} item xs={12}>
-                        <CourseCard courseNumber={course} courseName={schedule[course]['title']} user={props.user}/>
-                    </Grid>)
+                    return (
+                        <Grid key={course} item xs={12}>
+                            <CourseCard courseNumber={course} courseName={schedule[course]['title']} user={props.user} />
+                        </Grid>)
                 })
                 }
             </Grid>
         )
     } else {
-        return (
-            <p>Please Sign in</p>
-        )
+        if (props.user) {
+            return (<p>{props.user.uid}</p>)
+        } else {
+            return (
+                <p>Please Sign in</p>
+            )
+        }
     }
 }
 
