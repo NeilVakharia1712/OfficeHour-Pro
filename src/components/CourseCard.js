@@ -11,6 +11,7 @@ import "firebase/database";
 import firebase from "firebase/app";
 import OngoingOfficeHours from "./OngoingOfficeHours";
 import { areOHOngoing } from "./OngoingOfficeHours.js";
+import '../App.css';
 
 const useStyles = makeStyles({
   card: {

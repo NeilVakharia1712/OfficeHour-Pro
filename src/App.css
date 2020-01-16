@@ -6,3 +6,16 @@
   font-size: 18px;
   margin-top: 10vh;
 }
+
+.des {
+  display: inline-block;
+  margin-top: 0;
+  margin-bottom: 0;
+
+}
+
+.count {
+  margin-left: 15px;
+  font-size: 28px;
+  color: #f50057;
+}

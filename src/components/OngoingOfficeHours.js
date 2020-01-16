@@ -199,10 +199,8 @@ const OngoingOfficeHours = ({ courseNumber, officeHours, count }) => {
             {formatTime(ongoingSession.info.startTime)} -{" "}
             {formatTime(ongoingSession.info.endTime)}
           </Typography>
-          <Typography variant="body2" component="p">
-            Current Number of Students in Office Hours: {count}
-            {/* TO DO CHANGE THIS, should not hard code students */}
-          </Typography>
+            <p className="des">Current Number of Students:</p>
+            <p className="des count">{count}</p>
         </div>
       ) : (
         findNextOHSession(officeHours)
