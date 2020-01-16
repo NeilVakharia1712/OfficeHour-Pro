@@ -18,6 +18,8 @@ const CourseList = ({ user }) => {
                 console.log("The database returns: " + snapshot)
                 if (snapshot.val()) {
                     setCourse(snapshot.val().courses)
+                    setCheckedInCourse(snapshot.val().checkedInCourse);
+                    console.log('in useEffect' + checkedInCourse);
                 }
             })
         }
@@ -37,6 +39,7 @@ const CourseList = ({ user }) => {
         const userDb = db.child('Users/' + user.uid);
         userDb.once("value").then((snapshot) => {
             setCheckedInCourse(snapshot.val().checkedInCourse);
+            console.log('out of useEffect' + checkedInCourse);
         });
 
         return (

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Card,
@@ -11,6 +11,7 @@ import "firebase/database";
 import firebase from "firebase/app";
 import OngoingOfficeHours from "./OngoingOfficeHours";
 import { areOHOngoing } from "./OngoingOfficeHours.js";
+import '../App.css';
 
 const useStyles = makeStyles({
   card: {
@@ -31,11 +32,9 @@ const useStyles = makeStyles({
 
 const toggleCheckInOut = (
   user,
-  courseName,
   courseNumber,
   checkInText,
-  setCheckInText,
-  setCount
+  setCheckInText
 ) => {
   if (checkInText === "Check in") {
     firebase
@@ -45,22 +44,12 @@ const toggleCheckInOut = (
         [user.uid]: user.uid
       });
 
-      firebase
+    firebase
       .database()
       .ref("Users/" + user.uid)
       .update({
         checkedInCourse: courseNumber
       });
-
-    //Number Of Students
-    const ref = firebase
-      .database()
-      .ref("courses/" + courseNumber + "/officeHours/CheckedInUsers");
-    ref.once("value").then((snapshot) => {
-      const count = snapshot.numChildren();
-      console.log(count);
-      setCount(count);
-    });
 
     setCheckInText("Check out");
   } else if (checkInText === "Check out") {
@@ -76,16 +65,6 @@ const toggleCheckInOut = (
       .child('checkedInCourse')
       .remove();
 
-    //Count Number Of Students
-    const ref = firebase
-      .database()
-      .ref("courses/" + courseNumber + "/officeHours/CheckedInUsers");
-    ref.once("value").then((snapshot) => {
-      const count = snapshot.numChildren();
-      console.log(count);
-      setCount(count);
-    });
-
     setCheckInText("Check in");
   }
 };
@@ -94,7 +73,18 @@ const CourseCard = ({ user, courseName, courseNumber, officeHours, isCheckedIn }
   const classes = useStyles();
   const [checkInText, setCheckInText] = useState(isCheckedIn ? "Check out" : "Check in");
   const [count, setCount] = useState(0);
-  console.log(count);
+
+  useEffect(() => {
+    //Number Of Students
+    const ref = firebase
+      .database()
+      .ref("courses/" + courseNumber + "/officeHours/CheckedInUsers");
+    ref.on("value", (snapshot) => {
+      const count = snapshot.numChildren();
+      console.log(count);
+      setCount(count);
+    });
+  })
 
   return (
     <Card className={classes.card}>
@@ -108,7 +98,7 @@ const CourseCard = ({ user, courseName, courseNumber, officeHours, isCheckedIn }
         <OngoingOfficeHours
           courseNumber={courseNumber}
           officeHours={officeHours}
-          count = {count}
+          count={count}
         />
       </CardContent>
       <CardActions>
@@ -117,7 +107,7 @@ const CourseCard = ({ user, courseName, courseNumber, officeHours, isCheckedIn }
           variant="outlined"
           color="secondary"
           onClick={() => {
-            toggleCheckInOut(user, courseName, courseNumber, checkInText, setCheckInText, setCount);
+            toggleCheckInOut(user, courseNumber, checkInText, setCheckInText, setCount);
           }}
           size="small"
           disabled={!(areOHOngoing(courseNumber, officeHours).isOngoing)}
