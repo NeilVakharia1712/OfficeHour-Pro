@@ -34,7 +34,8 @@ const toggleCheckInOut = (
   courseName,
   courseNumber,
   checkInText,
-  setCheckInText
+  setCheckInText,
+  setCount
 ) => {
   if (checkInText === "Check in") {
     firebase
@@ -58,6 +59,7 @@ const toggleCheckInOut = (
     ref.once("value").then((snapshot) => {
       const count = snapshot.numChildren();
       console.log(count);
+      setCount(count);
     });
 
     setCheckInText("Check out");
@@ -81,6 +83,7 @@ const toggleCheckInOut = (
     ref.once("value").then((snapshot) => {
       const count = snapshot.numChildren();
       console.log(count);
+      setCount(count);
     });
 
     setCheckInText("Check in");
@@ -90,6 +93,8 @@ const toggleCheckInOut = (
 const CourseCard = ({ user, courseName, courseNumber, officeHours, isCheckedIn }) => {
   const classes = useStyles();
   const [checkInText, setCheckInText] = useState(isCheckedIn ? "Check out" : "Check in");
+  const [count, setCount] = useState(0);
+  console.log(count);
 
   return (
     <Card className={classes.card}>
@@ -103,15 +108,16 @@ const CourseCard = ({ user, courseName, courseNumber, officeHours, isCheckedIn }
         <OngoingOfficeHours
           courseNumber={courseNumber}
           officeHours={officeHours}
+          count = {count}
         />
       </CardContent>
       <CardActions>
-        <Button size="small">Learn More</Button>
+        {/* <Button size="small">Learn More</Button> // TO DO make this button functional */}
         <Button
           variant="outlined"
           color="secondary"
           onClick={() => {
-            toggleCheckInOut(user, courseName, courseNumber, checkInText, setCheckInText);
+            toggleCheckInOut(user, courseName, courseNumber, checkInText, setCheckInText, setCount);
           }}
           size="small"
           disabled={!(areOHOngoing(courseNumber, officeHours).isOngoing)}

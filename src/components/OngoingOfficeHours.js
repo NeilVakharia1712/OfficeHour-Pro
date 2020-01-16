@@ -30,8 +30,6 @@ const convertDayOfWeekStrToNum = day => {
   }
 };
 
-
-
 export const areOHOngoing = (courseNumber, officeHours) => {
   const [day, hour, minute] = getCurrentTime();
   const sessions = Object.values(officeHours).filter(
@@ -40,8 +38,11 @@ export const areOHOngoing = (courseNumber, officeHours) => {
   if (sessions === undefined || sessions.length === 0) return false;
 
   for (var potentialOngoingSession of sessions) {
-    if ((typeof(potentialOngoingSession) != 'object') || !('startTime' in potentialOngoingSession)) {
-        continue;
+    if (
+      typeof potentialOngoingSession != "object" ||
+      !("startTime" in potentialOngoingSession)
+    ) {
+      continue;
     }
     const startTime = potentialOngoingSession.startTime.split(":");
     const startTimeHour = startTime[0];
@@ -108,10 +109,11 @@ const formatFullDayOfWeekString = day => {
 
 const findNextOHSession = officeHours => {
   var [nowDay, nowHour] = getCurrentTime();
-  var nextSession = undefined;
+  var nextSessionThisWeek = undefined;
+  var firstSessionNextWeek = undefined;
   for (var session of Object.values(officeHours)) {
-    if ((typeof(session) !== 'object') || !('weekDay' in session)) {
-        continue;
+    if (typeof session !== "object" || !("weekDay" in session)) {
+      continue;
     }
 
     const weekDay = convertDayOfWeekStrToNum(session.weekDay);
@@ -119,24 +121,58 @@ const findNextOHSession = officeHours => {
     const startHour = Number(startTime[0]);
     const startMinute = Number(startTime[1]);
 
+    console.log(session);
+    console.log(weekDay - nowDay);
+
     // If office hours were today, they already passed, and there are other options for office hours, skip this session
-    if (weekDay === nowDay && nowHour > startHour && Object.keys(officeHours).length > 1) {
-        continue;
+    if (
+      weekDay === nowDay &&
+      nowHour > startHour &&
+      Object.keys(officeHours).length > 1
+    ) {
+      continue;
     }
 
-    if (
-      !nextSession || // next session hasn't been initialized yet
-      weekDay - nowDay < nextSession.day - nowDay ||
-      (weekDay - nowDay === nextSession.day - nowDay &&
-        startHour < nextSession.startHour)
-    ) {
-      nextSession = {
-        session: session,
-        day: weekDay,
-        startHour: startHour,
-        startMinute: startMinute
-      };
+    // If the next time this office hours session occurs is this week
+    if (weekDay - nowDay > 0) {
+      if (
+        !nextSessionThisWeek || // next session hasn't been initialized yet
+        (weekDay - nowDay < nextSessionThisWeek.day - nowDay) ||
+        (weekDay - nowDay === nextSessionThisWeek.day - nowDay &&
+          startHour < nextSessionThisWeek.startHour)
+      ) {
+        nextSessionThisWeek = {
+          session: session,
+          day: weekDay,
+          startHour: startHour,
+          startMinute: startMinute
+        };
+      }
+    } else if (weekDay - nowDay < 0) {
+      // else if the next time this office hours session occurs is next week
+      if (
+        !firstSessionNextWeek || // next session hasn't been initialized yet
+        (weekDay - nowDay) < (firstSessionNextWeek.day - nowDay) ||
+        (weekDay - nowDay === firstSessionNextWeek.day - nowDay &&
+          startHour < firstSessionNextWeek.startHour)
+      ) {
+        firstSessionNextWeek = {
+          session: session,
+          day: weekDay,
+          startHour: startHour,
+          startMinute: startMinute
+        };
+      }
     }
+  }
+
+  // If there are more OH sessions this week, then next OH is this week
+  // if not, the next OH is next week
+  var nextSession;
+  if (nextSessionThisWeek) {
+    nextSession = nextSessionThisWeek;
+  } else {
+    nextSession = firstSessionNextWeek;
   }
 
   return (
@@ -151,7 +187,7 @@ const findNextOHSession = officeHours => {
   );
 };
 
-const OngoingOfficeHours = ({ courseNumber, officeHours }) => {
+const OngoingOfficeHours = ({ courseNumber, officeHours, count }) => {
   const ongoingSession = areOHOngoing(courseNumber, officeHours);
 
   return (
@@ -164,7 +200,7 @@ const OngoingOfficeHours = ({ courseNumber, officeHours }) => {
             {formatTime(ongoingSession.info.endTime)}
           </Typography>
           <Typography variant="body2" component="p">
-            Current Number of Students in Office Hours: 4{" "}
+            Current Number of Students in Office Hours: {count}
             {/* TO DO CHANGE THIS, should not hard code students */}
           </Typography>
         </div>
