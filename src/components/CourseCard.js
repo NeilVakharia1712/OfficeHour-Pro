@@ -56,7 +56,7 @@ const toggleCheckInOut = (
     const ref = firebase
       .database()
       .ref("courses/" + courseNumber + "/officeHours/CheckedInUsers");
-    ref.once("value").then((snapshot) => {
+    ref.on("value",(snapshot) => {
       const count = snapshot.numChildren();
       console.log(count);
       setCount(count);
