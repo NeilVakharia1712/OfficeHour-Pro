@@ -106,7 +106,7 @@ const CourseCard = ({ user, courseName, courseNumber, officeHours, isCheckedIn }
           variant="outlined"
           color="secondary"
           onClick={() => {
-            toggleCheckInOut(user, courseName, courseNumber, checkInText, setCheckInText, setCount);
+            toggleCheckInOut(user, courseNumber, checkInText, setCheckInText, setCount);
           }}
           size="small"
           disabled={!(areOHOngoing(courseNumber, officeHours).isOngoing)}
