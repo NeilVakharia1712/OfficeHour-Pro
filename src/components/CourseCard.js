@@ -56,9 +56,13 @@ const unchecked = (
     let courseList = snapshot.val()['courses'];
     let pos = courseList.indexOf(courseNumber);
     courseList.splice(pos, 1);
-    ref.update({
-      ['courses']: courseList
-    })
+    if (courseList) {
+      ref.update({
+        ['courses']: courseList
+      })
+    } else {
+      ref.remove();
+    }
   });
   setEnroll(false);
 }
@@ -103,7 +107,7 @@ const toggleCheckInOut = (
 };
 
 
-const CourseCard = ({ user, courseName, courseNumber, officeHours, isCheckedIn, mode, isEnrolled=false}) => {
+const CourseCard = ({ user, courseName, courseNumber, officeHours, isCheckedIn, mode, isEnrolled = false }) => {
   const classes = useStyles()
   const [checkInText, setCheckInText] = useState(isCheckedIn ? "Check out" : "Check in")
   const [count, setCount] = useState(0)
@@ -166,7 +170,7 @@ const CourseCard = ({ user, courseName, courseNumber, officeHours, isCheckedIn, 
               </Typography>
             </Grid>
             <Grid item xs={1}>
-              <Checkbox checked={enroll} onChange={()=>{enroll?unchecked(user, courseNumber, setEnroll):checked(user, courseNumber, setEnroll)}}/>
+              <Checkbox checked={enroll} onChange={() => { enroll ? unchecked(user, courseNumber, setEnroll) : checked(user, courseNumber, setEnroll) }} />
             </Grid>
           </Grid>
         </CardContent>
