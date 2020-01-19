@@ -46,6 +46,10 @@ const App = () => {
 					setCourse(snapshot.val().courses)
 					setCheckedInCourse(snapshot.val().checkedInCourse);
 				}
+				else{
+					setCourse([]);
+					setCheckedInCourse(null); 
+				}
 			}
 			const userDb = firebase.database().ref('Users/' + user.uid);
 			userDb.on('value', updateUserCourse);
