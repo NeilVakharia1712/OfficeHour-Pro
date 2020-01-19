@@ -64,10 +64,12 @@ const toggleCheckInOut = (
   }
 };
 
-const CourseCard = ({ user, courseName, courseNumber, officeHours, isCheckedIn, mode }) => {
-  const classes = useStyles();
-  const [checkInText, setCheckInText] = useState(isCheckedIn ? "Check out" : "Check in");
-  const [count, setCount] = useState(0);
+
+const CourseCard = ({ user, courseName, courseNumber, officeHours, isCheckedIn, mode, isEnrolled=false}) => {
+  const classes = useStyles()
+  const [checkInText, setCheckInText] = useState(isCheckedIn ? "Check out" : "Check in")
+  const [count, setCount] = useState(0)
+  const [enroll, setEnroll] = useState(isEnrolled)
 
   useEffect(() => {
     //Number Of Students
@@ -80,7 +82,7 @@ const CourseCard = ({ user, courseName, courseNumber, officeHours, isCheckedIn, 
     });
   })
 
-  if (mode == 'CourseList') {
+  if (mode === 'CourseList') {
     return (
       <Card className={classes.card}>
         <CardContent>
@@ -126,7 +128,7 @@ const CourseCard = ({ user, courseName, courseNumber, officeHours, isCheckedIn, 
               </Typography>
             </Grid>
             <Grid item xs={1}>
-              <Checkbox />
+              <Checkbox checked={enroll}/>
             </Grid>
           </Grid>
         </CardContent>
