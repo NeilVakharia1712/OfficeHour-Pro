@@ -24,6 +24,8 @@ const App = () => {
 	const [user, setUser] = useState(null);
 	const [mode, setMode] = useState(false);
 	const [schedule, setSchedule] = useState(null);
+	const [courses, setCourse] = useState([]);
+    const [checkedInCourse, setCheckedInCourse] = useState(null);
 
 	useEffect(() => {
 		firebase.auth().onAuthStateChanged(setUser);
@@ -37,14 +39,27 @@ const App = () => {
 		courseDb.once("value", getCourseInfo, error => alert(error));
 	}, [])
 
+    useEffect(() => {
+        if (user) {
+            const userDb = firebase.database().ref('Users/' + user.uid);
+            userDb.once('value').then(snapshot => {
+                if (snapshot.val()) {
+                    setCourse(snapshot.val().courses)
+                    setCheckedInCourse(snapshot.val().checkedInCourse);
+                }
+            })
+        }
+        // eslint-disable-next-line
+    }, [user])
+
 	return (
 		<Container disableGutters>
 			<ButtonAppBar user={user} />
 			<Slide direction="left" in={!mode} mountOnEnter unmountOnExit>
-				<div><CourseList user={user} schedule={schedule} /></div>
+				<div><CourseList user={user} schedule={schedule} courses={courses} checkedInCourse={checkedInCourse}/></div>
 			</Slide>
 			<Slide direction="right" in={mode} mountOnEnter unmountOnExit>
-				<div><AllCourseList schedule={schedule} user={user} /></div>
+				<div><AllCourseList schedule={schedule} user={user} courses={courses}/></div>
 			</Slide>
 			<FloatingActionButtons mode={mode} setMode={setMode} />
 		</Container>

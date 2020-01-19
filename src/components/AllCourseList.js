@@ -2,7 +2,8 @@ import React from 'react'
 import { Grid } from '@material-ui/core'
 import CourseCard from './CourseCard'
 
-const AllCourseList = ({ schedule, user }) => {
+const AllCourseList = ({ schedule, user, courses }) => {
+	console.log(courses)
 	if (schedule) {
 		return (
 			<Grid container spacing={1}>
@@ -14,6 +15,7 @@ const AllCourseList = ({ schedule, user }) => {
 								courseName={course['title']}
 								officeHours={course['officeHours']}
 								user={user}
+								isEnrolled={courses.includes(course['id'])?true:false}
 							/>
 						</Grid>)
 				})

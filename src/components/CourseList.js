@@ -1,29 +1,10 @@
-import React, { useEffect, useState } from 'react'
-import firebase from 'firebase/app';
-import 'firebase/database';
+import React from 'react'
 import { Grid, Button } from '@material-ui/core';
 import CourseCard from './CourseCard';
 import { SignInWithGoogle } from './Login'
 
-const CourseList = ({ user, schedule }) => {
-    const db = firebase.database().ref();
-    const [courses, setCourse] = useState([]);
-    const [checkedInCourse, setCheckedInCourse] = useState(null);
-
-    useEffect(() => {
-        if (user) {
-            const userDb = db.child('Users/' + user.uid);
-            userDb.once('value').then(snapshot => {
-                if (snapshot.val()) {
-                    setCourse(snapshot.val().courses)
-                    setCheckedInCourse(snapshot.val().checkedInCourse);
-                }
-            })
-        }
-        // eslint-disable-next-line
-    }, [user])
-
-    if (user && schedule && checkedInCourse) {
+const CourseList = ({ user, schedule, courses, checkedInCourse}) => {
+    if (user && schedule && courses) {
         return (
             <Grid container spacing={1}>
                 {courses.map(course => {
