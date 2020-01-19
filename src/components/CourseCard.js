@@ -27,7 +27,8 @@ const useStyles = makeStyles({
 
 const checked = (
   user,
-  courseNumber
+  courseNumber,
+  setEnroll
 ) => {
   const ref = firebase.database().ref("Users/" + user.uid);
   ref.once("value", (snapshot) => {
@@ -41,12 +42,14 @@ const checked = (
     ref.update({
       ['courses']: courseList
     })
-  })
+  });
+  setEnroll(true);
 }
 
 const unchecked = (
   user,
-  courseNumber
+  courseNumber,
+  setEnroll
 ) => {
   const ref = firebase.database().ref("Users/" + user.uid);
   ref.once("value", (snapshot) => {
@@ -56,7 +59,8 @@ const unchecked = (
     ref.update({
       ['courses']: courseList
     })
-  })
+  });
+  setEnroll(false);
 }
 
 const toggleCheckInOut = (
@@ -162,7 +166,7 @@ const CourseCard = ({ user, courseName, courseNumber, officeHours, isCheckedIn, 
               </Typography>
             </Grid>
             <Grid item xs={1}>
-              <Checkbox checked={enroll}/>
+              <Checkbox checked={enroll} onChange={()=>{enroll?unchecked(user, courseNumber, setEnroll):checked(user, courseNumber, setEnroll)}}/>
             </Grid>
           </Grid>
         </CardContent>
