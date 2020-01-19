@@ -66,7 +66,7 @@ const App = () => {
 			<Slide direction="right" in={mode} mountOnEnter unmountOnExit>
 				<div><AllCourseList schedule={schedule} user={user} courses={courses} /></div>
 			</Slide>
-			<FloatingActionButtons mode={mode} setMode={setMode} />
+			{user?<FloatingActionButtons mode={mode} setMode={setMode}/> : <></>} 
 		</Container>
 	)
 };
