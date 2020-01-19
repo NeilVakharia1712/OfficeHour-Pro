@@ -25,6 +25,40 @@ const useStyles = makeStyles({
   }
 });
 
+const checked = (
+  user,
+  courseNumber
+) => {
+  const ref = firebase.database().ref("Users/" + user.uid);
+  ref.once("value", (snapshot) => {
+    let courseList = [];
+    if (!snapshot.val()) {
+      courseList.push(courseNumber);
+    } else {
+      courseList = snapshot.val()['courses'];
+      courseList.push(courseNumber);
+    }
+    ref.update({
+      ['courses']: courseList
+    })
+  })
+}
+
+const unchecked = (
+  user,
+  courseNumber
+) => {
+  const ref = firebase.database().ref("Users/" + user.uid);
+  ref.once("value", (snapshot) => {
+    let courseList = snapshot.val()['courses'];
+    let pos = courseList.indexOf(courseNumber);
+    courseList.splice(pos, 1); 
+    ref.update({
+      ['courses']: courseList
+    })
+  })
+}
+
 const toggleCheckInOut = (
   user,
   courseNumber,
@@ -102,7 +136,7 @@ const CourseCard = ({ user, courseName, courseNumber, officeHours, isCheckedIn, 
             variant="outlined"
             color="secondary"
             onClick={() => {
-              toggleCheckInOut(user, courseNumber, checkInText, setCheckInText, setCount);
+              toggleCheckInOut(user, courseNumber, checkInText, setCheckInText);
             }}
             size="small"
             disabled={!(areOHOngoing(courseNumber, officeHours).isOngoing)}
@@ -127,6 +161,13 @@ const CourseCard = ({ user, courseName, courseNumber, officeHours, isCheckedIn, 
             </Grid>
             <Grid item xs={1}>
               <Checkbox />
+              <Button
+                onClick={() => {
+                  unchecked(user, courseNumber)
+                }}
+              >
+                Test
+          </Button>
             </Grid>
           </Grid>
         </CardContent>
