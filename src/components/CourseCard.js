@@ -52,7 +52,7 @@ const unchecked = (
   ref.once("value", (snapshot) => {
     let courseList = snapshot.val()['courses'];
     let pos = courseList.indexOf(courseNumber);
-    courseList.splice(pos, 1); 
+    courseList.splice(pos, 1);
     ref.update({
       ['courses']: courseList
     })
@@ -161,13 +161,6 @@ const CourseCard = ({ user, courseName, courseNumber, officeHours, isCheckedIn, 
             </Grid>
             <Grid item xs={1}>
               <Checkbox />
-              <Button
-                onClick={() => {
-                  unchecked(user, courseNumber)
-                }}
-              >
-                Test
-          </Button>
             </Grid>
           </Grid>
         </CardContent>
