@@ -121,9 +121,6 @@ const findNextOHSession = officeHours => {
     const startHour = Number(startTime[0]);
     const startMinute = Number(startTime[1]);
 
-    console.log(session);
-    console.log(weekDay - nowDay);
-
     // If office hours were today, they already passed, and there are other options for office hours, skip this session
     if (
       weekDay === nowDay &&

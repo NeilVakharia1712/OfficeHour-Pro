@@ -58,7 +58,7 @@ const ButtonAppBar = (props) => {
                         <Typography variant="h6" className={classes.title}>
                             OfficeHours Pro
                     </Typography>
-                    {props.user ? <SimplePopover><Avatar src={props.user.photoURL} /></SimplePopover> : <SignIn />}
+                        {props.user ? <SimplePopover><Avatar src={props.user.photoURL} /></SimplePopover> : <SignIn />}
                     </Toolbar>
                 </AppBar>
             </ElevationScroll>
