@@ -48,7 +48,7 @@ const App = () => {
 				}
 				else{
 					setCourse([]);
-					setCheckedInCourse(null); 
+					setCheckedInCourse(null);
 				}
 			}
 			const userDb = firebase.database().ref('Users/' + user.uid);
@@ -61,12 +61,12 @@ const App = () => {
 		<Container disableGutters>
 			<ButtonAppBar user={user} />
 			<Slide direction="left" in={!mode} mountOnEnter unmountOnExit>
-				<div><CourseList user={user} schedule={schedule} courses={courses} checkedInCourse={checkedInCourse} /></div>
+				<div><CourseList user={user} schedule={schedule} courses={courses} checkedInCourse={checkedInCourse} mode={mode} setMode={setMode} /></div>
 			</Slide>
 			<Slide direction="right" in={mode} mountOnEnter unmountOnExit>
 				<div><AllCourseList schedule={schedule} user={user} courses={courses} /></div>
 			</Slide>
-			{user?<FloatingActionButtons mode={mode} setMode={setMode}/> : <></>} 
+			{user?<FloatingActionButtons mode={mode} setMode={setMode}/> : <></>}
 		</Container>
 	)
 };

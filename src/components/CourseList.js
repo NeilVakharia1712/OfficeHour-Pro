@@ -4,9 +4,11 @@ import CourseCard from './CourseCard';
 import { SignInWithGoogle } from './Login'
 import '../App.css';
 
-const CourseList = ({ user, schedule, courses, checkedInCourse }) => {
-	console.log(user && schedule);
-	console.log(courses.length);
+const CourseList = ({ user, schedule, courses, checkedInCourse, mode, setMode }) => {
+	const AddCourses = () => {
+		setMode(true);
+	};
+
 	if (user && schedule && courses && (courses.length !== 0)) {
 		console.log('here');
 		return (
@@ -31,6 +33,7 @@ const CourseList = ({ user, schedule, courses, checkedInCourse }) => {
 		return (
 			<div className="content">
 				<p className="notification">{`You havn't add any courses. Please first add courses.`}</p>
+				<Button variant="contained" color="secondary" onClick={() => { AddCourses() }}>Add Courses</Button>
 			</div>
 		)
 	} else {
