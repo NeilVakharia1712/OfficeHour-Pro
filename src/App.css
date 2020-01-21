@@ -19,3 +19,11 @@
   font-size: 28px;
   color: #f50057;
 }
+
+.course-container {
+  padding-bottom: 80px;
+}
+
+.floating-button {
+  z-index: 999;
+}

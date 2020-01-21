@@ -2,11 +2,15 @@ import React from 'react'
 import { Grid, Button } from '@material-ui/core';
 import CourseCard from './CourseCard';
 import { SignInWithGoogle } from './Login'
+import '../App.css';
 
 const CourseList = ({ user, schedule, courses, checkedInCourse }) => {
-	if (user && schedule && courses) {
+	console.log(user && schedule);
+	console.log(courses.length);
+	if (user && schedule && courses && (courses.length !== 0)) {
+		console.log('here');
 		return (
-			<Grid container spacing={1}>
+			<Grid className="course-container" container spacing={1}>
 				{courses.map(course => {
 					return (
 						<Grid key={course} item xs={12}>
@@ -26,7 +30,7 @@ const CourseList = ({ user, schedule, courses, checkedInCourse }) => {
 	} else if (user && schedule) {
 		return (
 			<div className="content">
-				<p className="notification">Enroll courses to see office hours</p>
+				<p className="notification">{`You havn't add any courses. Please first add courses.`}</p>
 			</div>
 		)
 	} else {

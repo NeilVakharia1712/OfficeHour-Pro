@@ -6,7 +6,7 @@ const AllCourseList = ({ schedule, user, courses }) => {
 	console.log(courses)
 	if (schedule) {
 		return (
-			<Grid container spacing={1}>
+			<Grid className="course-container" container spacing={1}>
 				{Object.values(schedule).map(course => {
 					return (
 						<Grid key={course['id']} item xs={12}>
