@@ -131,7 +131,7 @@ const findNextOHSession = officeHours => {
     }
 
     // If the next time this office hours session occurs is this week
-    if (weekDay - nowDay > 0) {
+    if (weekDay - nowDay >= 0) {
       if (
         !nextSessionThisWeek || // next session hasn't been initialized yet
         (weekDay - nowDay < nextSessionThisWeek.day - nowDay) ||
