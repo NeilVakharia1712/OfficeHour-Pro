@@ -1,5 +1,6 @@
 import React from 'react'
 import { Grid, Button } from '@material-ui/core';
+import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import CourseCard from './CourseCard';
 import { SignInWithGoogle } from './Login'
 import '../App.css';
@@ -32,8 +33,8 @@ const CourseList = ({ user, schedule, courses, checkedInCourse, mode, setMode })
 	} else if (user && schedule) {
 		return (
 			<div className="content">
-				<p className="notification">{`You have not added any courses. Add courses to view office hours.`}</p>
-				<Button variant="contained" color="secondary" onClick={() => { AddCourses() }}>Add Courses</Button>
+				Add a course to begin
+				<ArrowForwardIcon/>
 			</div>
 		)
 	} else {
