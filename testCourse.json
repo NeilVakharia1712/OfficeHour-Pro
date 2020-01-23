@@ -2,14 +2,14 @@
     "Users": {
         "ncWok29iAaaa4xbl2kA5IR7qwau1": {
             "courses": [
-                "F101",
+                "F340",
                 "F348",
                 "F349"
             ]
         },
         "DoEk4pGDzIRBR3E5rrUHPGBgwu93": {
             "courses": [
-                "F101",
+                "F340",
                 "F348",
                 "F349",
                 "W396-4"
@@ -17,21 +17,21 @@
         },
         "g0bsl8fUfOR6kfeouiwa7GEkuiH3": {
             "courses": [
-                "F101",
+                "F340",
                 "F348",
                 "F349"
             ]
         },
         "kDbAHeUVrFX2OVzb0sehILY0CHD3": {
             "courses": [
-                "F101",
+                "F340",
                 "F349",
                 "W396-4"
             ]
         },
         "WUPMNogUgJQ680nkvqjbbS7YgxA2": {
             "courses": [
-                "F101",
+                "F340",
                 "F348",
                 "F349",
                 "W396-4"
@@ -39,8 +39,8 @@
         }
     },
     "courses": {
-        "F101": {
-            "id": "F101",
+        "F340": {
+            "id": "F340",
             "officeHours": {
                 "2e0ca9e3-3a87-4860-8966-e7cc8a8cf72b": {
                     "endTime": "12:00",
@@ -59,7 +59,7 @@
                     "desiredCapacity": 20
                 }
             },
-            "title": "Computer Science: Concepts, Philosophy, and Connections"
+            "title": "Computer Networking"
         },
         "F348": {
             "id": "F348",

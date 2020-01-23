@@ -1,8 +1,60 @@
 .content {
-  text-align: center;
+  margin: 0;
+	top: auto;
+	right: 90px;
+	bottom: 35px;
+	left: auto;
+	position: fixed;
+  color: #555;
+  font-weight: 500;
 }
 
-.notification {
+.des {
+  display: inline-block;
+  margin-top: 0;
+  margin-bottom: 0;
+
+}
+
+.count {
+  margin-left: 15px;
+  font-size: 28px;
+  color: #f50057;
+}
+
+.course-container {
+  padding-bottom: 80px;
+}
+
+.floating-button {
+  z-index: 999;
+}
+
+.ongoing{
+  margin-top: 10px;
+}
+
+.arrow_icon {
+  position: relative;
+  top: 7px;
+}
+
+.tip {
+  margin-right: 6px;
+  font-size: 16px;
+}
+
+.sign_in {
+  text-align: center;
+  color: #555;
+  margin-top: 5%;
+}
+
+.sign_in .notification {
   font-size: 18px;
-  margin-top: 10vh;
+  background-color: #fafafa;
+}
+
+.columns .column {
+  background-color: #fafafa;
 }

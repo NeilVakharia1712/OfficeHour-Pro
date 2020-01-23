@@ -21,8 +21,14 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+<<<<<<< HEAD
 
 # firebase
 /.firebase
 .firebaserc
 firebase.json
+=======
+/.firebase
+firebase.json
+.firebaserc
+>>>>>>> dev

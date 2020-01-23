@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Container } from '@material-ui/core';
+import { Container, Slide } from '@material-ui/core';
 import firebase from 'firebase/app';
 import 'firebase/database';
 import ButtonAppBar from './components/AppBar';
 import CourseList from './components/CourseList';
 import './App.css';
+import FloatingActionButtons from './components/FloatingActionButton';
+import AllCourseList from './components/AllCourseList';
 
 const firebaseConfig = {
 	apiKey: "AIzaSyD4Ph2v9VLa0EkAcyVNVV4D31xTc6z7cak",
@@ -20,15 +22,51 @@ firebase.initializeApp(firebaseConfig);
 
 const App = () => {
 	const [user, setUser] = useState(null);
+	const [mode, setMode] = useState(false);
+	const [schedule, setSchedule] = useState(null);
+	const [courses, setCourse] = useState([]);
+	const [checkedInCourse, setCheckedInCourse] = useState(null);
 
 	useEffect(() => {
 		firebase.auth().onAuthStateChanged(setUser);
 	}, []);
 
+	useEffect(() => {
+		const getCourseInfo = snapshot => {
+			if (snapshot.val()) setSchedule(snapshot.val());
+		}
+		const courseDb = firebase.database().ref('courses');
+		courseDb.once("value", getCourseInfo, error => alert(error));
+	}, [])
+
+	useEffect(() => {
+		if (user) {
+			const updateUserCourse = (snapshot) => {
+				if (snapshot.val()) {
+					setCourse(snapshot.val().courses)
+					setCheckedInCourse(snapshot.val().checkedInCourse);
+				}
+				else{
+					setCourse([]);
+					setCheckedInCourse(null);
+				}
+			}
+			const userDb = firebase.database().ref('Users/' + user.uid);
+			userDb.on('value', updateUserCourse);
+			// eslint-disable-next-line
+		}
+	}, [user])
+
 	return (
 		<Container disableGutters>
 			<ButtonAppBar user={user} />
-			<CourseList user={user}/>
+			<Slide direction="left" in={!mode} mountOnEnter unmountOnExit>
+				<div><CourseList user={user} schedule={schedule} courses={courses} checkedInCourse={checkedInCourse} mode={mode} setMode={setMode} /></div>
+			</Slide>
+			<Slide direction="right" in={mode} mountOnEnter unmountOnExit>
+				<div><AllCourseList schedule={schedule} user={user} courses={courses} /></div>
+			</Slide>
+			{user?<FloatingActionButtons mode={mode} setMode={setMode}/> : <></>}
 		</Container>
 	)
 };

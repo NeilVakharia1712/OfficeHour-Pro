@@ -1,5 +1,6 @@
 import React from "react";
 import Typography from "@material-ui/core/Typography";
+import { Grid } from "@material-ui/core"
 
 const getCurrentTime = () => {
   const now = new Date();
@@ -58,11 +59,8 @@ export const areOHOngoing = (courseNumber, officeHours) => {
     ) {
       return {
         isOngoing: true,
-        info: {
-          courseNumber: courseNumber,
-          startTime: potentialOngoingSession.startTime,
-          endTime: potentialOngoingSession.endTime
-        }
+        courseNumber: courseNumber,
+        info: potentialOngoingSession
       };
     }
   }
@@ -72,7 +70,9 @@ export const areOHOngoing = (courseNumber, officeHours) => {
   };
 };
 
-const formatTime = time => {
+export const formatTime = time => {
+  console.log("time", time);
+  if (!time) return;
   const timeArray = time.split(":");
   var timeHour = timeArray[0];
   if (Number(timeHour) > 12) {
@@ -86,7 +86,7 @@ const formatTime = time => {
   return `${timeHour}:${timeMinute}${timeAMPM}`;
 };
 
-const formatFullDayOfWeekString = day => {
+export const formatFullDayOfWeekString = day => {
   switch (day) {
     case "su":
       return "Sunday";
@@ -121,9 +121,6 @@ const findNextOHSession = officeHours => {
     const startHour = Number(startTime[0]);
     const startMinute = Number(startTime[1]);
 
-    console.log(session);
-    console.log(weekDay - nowDay);
-
     // If office hours were today, they already passed, and there are other options for office hours, skip this session
     if (
       weekDay === nowDay &&
@@ -134,10 +131,10 @@ const findNextOHSession = officeHours => {
     }
 
     // If the next time this office hours session occurs is this week
-    if (weekDay - nowDay > 0) {
+    if (weekDay - nowDay >= 0) {
       if (
         !nextSessionThisWeek || // next session hasn't been initialized yet
-        (weekDay - nowDay < nextSessionThisWeek.day - nowDay) ||
+        weekDay - nowDay < nextSessionThisWeek.day - nowDay ||
         (weekDay - nowDay === nextSessionThisWeek.day - nowDay &&
           startHour < nextSessionThisWeek.startHour)
       ) {
@@ -152,7 +149,7 @@ const findNextOHSession = officeHours => {
       // else if the next time this office hours session occurs is next week
       if (
         !firstSessionNextWeek || // next session hasn't been initialized yet
-        (weekDay - nowDay) < (firstSessionNextWeek.day - nowDay) ||
+        weekDay - nowDay < firstSessionNextWeek.day - nowDay ||
         (weekDay - nowDay === firstSessionNextWeek.day - nowDay &&
           startHour < firstSessionNextWeek.startHour)
       ) {
@@ -193,20 +190,34 @@ const OngoingOfficeHours = ({ courseNumber, officeHours, count }) => {
   return (
     <div>
       {ongoingSession.isOngoing ? (
-        <div>
-          <Typography variant="body2" component="p">
-            Ongoing Office Hours Session:{" "}
-            {formatTime(ongoingSession.info.startTime)} -{" "}
-            {formatTime(ongoingSession.info.endTime)}
+        <div className="ongoing">
+          <Typography variant="body1" component="p">
+            Ongoing Office Hours:
           </Typography>
-          <Typography variant="body2" component="p">
-            Current Number of Students in Office Hours: {count}
-            {/* TO DO CHANGE THIS, should not hard code students */}
-          </Typography>
+          <Grid item container>
+            <Grid item xs={8}>
+              <Typography variant='h6'>
+                {formatTime(ongoingSession.info.startTime)} - {formatTime(ongoingSession.info.endTime)}
+              </Typography>
+            </Grid>
+            <Grid item xs={4}>
+              <Typography variant='h6' align='right'>
+                Current People: {count}/{ongoingSession.info.desiredCapacity}
+              </Typography>
+            </Grid>
+            <Grid item xs={6}>
+              {ongoingSession.info.TAProf}
+            </Grid>
+            <Grid item xs={6}>
+              <Typography variant='body1' align='right'>
+                {ongoingSession.info.location}
+              </Typography>
+            </Grid>
+          </Grid>
         </div>
       ) : (
-        findNextOHSession(officeHours)
-      )}
+          findNextOHSession(officeHours)
+        )}
     </div>
   );
 };

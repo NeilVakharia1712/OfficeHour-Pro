@@ -2,8 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import { AppBar, Toolbar, Typography, useScrollTrigger, CssBaseline, IconButton, Avatar} from '@material-ui/core';
-import MenuIcon from '@material-ui/icons/Menu';
-import { SignIn } from './Login'
+// import MenuIcon from '@material-ui/icons/Menu';
 import SimplePopover from './Popover'
 import '../App.css';
 
@@ -52,13 +51,13 @@ const ButtonAppBar = (props) => {
             <ElevationScroll {...props}>
                 <AppBar>
                     <Toolbar>
-                        <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+                        {/* <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
                             <MenuIcon />
-                        </IconButton>
+                        </IconButton> */}
                         <Typography variant="h6" className={classes.title}>
                             OfficeHours Pro
                     </Typography>
-                    {props.user ? <SimplePopover><Avatar src={props.user.photoURL} /></SimplePopover> : <SignIn />}
+                        {props.user ? <SimplePopover><Avatar src={props.user.photoURL} /></SimplePopover> : null}
                     </Toolbar>
                 </AppBar>
             </ElevationScroll>

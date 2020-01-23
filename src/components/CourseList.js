@@ -1,68 +1,74 @@
-import React, { useEffect, useState } from 'react'
-import firebase from 'firebase/app';
-import 'firebase/database';
+import React from 'react'
 import { Grid, Button } from '@material-ui/core';
+import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import CourseCard from './CourseCard';
 import { SignInWithGoogle } from './Login'
+import '../App.css';
+import "rbx/index.css";
+import { Column } from "rbx";
 
-const CourseList = ({ user }) => {
-    const db = firebase.database().ref();
-    const [schedule, setSchedule] = useState(null);
-    const [courses, setCourse] = useState([]);
-    const [checkedInCourse, setCheckedInCourse] = useState(null);
+const CourseList = ({
+  user,
+  schedule,
+  courses,
+  checkedInCourse,
+  mode,
+  setMode
+}) => {
+  const AddCourses = () => {
+    setMode(true);
+  };
 
-    useEffect(() => {
-        if (user) {
-            const userDb = db.child('Users/' + user.uid);
-            userDb.once('value').then(snapshot => {
-                console.log("The database returns: " + snapshot)
-                if (snapshot.val()) {
-                    setCourse(snapshot.val().courses)
-                }
-            })
-        }
-        // eslint-disable-next-line
-    }, [user])
-
-    useEffect(() => {
-        const getCourseInfo = snapshot => {
-            if (snapshot.val()) setSchedule(snapshot.val());
-        }
-        const courseDb = db.child('courses')
-        courseDb.once("value", getCourseInfo, error => alert(error));
-        // eslint-disable-next-line
-    }, [])
-
-    if (user && schedule) {
-        const userDb = db.child('Users/' + user.uid);
-        userDb.once("value").then((snapshot) => {
-            setCheckedInCourse(snapshot.val().checkedInCourse);
-        });
-
-        return (
-            <Grid container spacing={1}>
-                {courses.map(course => {
-                    return(
-                    <Grid key={course} item xs={12}>
-                        <CourseCard
-                            courseNumber={course}
-                            courseName={schedule[course]['title']}
-                            officeHours={schedule[course]['officeHours']}
-                            user={user}
-                            isCheckedIn={course === checkedInCourse}/>
-                    </Grid>)
-                })
-                }
-            </Grid>
-        )
-    } else {
-        return (
-            <div className="content">
-                <p className="notification">Please Sign in to see the course list</p>
-                <Button variant="contained" color="primary" onClick={() => {SignInWithGoogle()}}>Sign In</Button>
-            </div>
-        )
-    }
+  if (user && schedule && courses && courses.length !== 0) {
+    console.log("here");
+    const length = courses.length;
+    return (
+        <Column.Group style={{ margin: "5px", background: "white" }}>
+          <Column style={{ padding:"0px 5px 0px" }}>
+            {courses.slice(0, Math.ceil(length / 2)).map(course => {
+              return (
+                <CourseCard
+                  courseNumber={course}
+                  courseName={schedule[course]["title"]}
+                  officeHours={schedule[course]["officeHours"]}
+                  user={user}
+                  isCheckedIn={course === checkedInCourse}
+                  mode="CourseList"
+                />
+              );
+            })}
+          </Column>
+          <Column style={{ padding:"0px 5px 0px" }}>
+            {courses.slice(Math.ceil(length / 2), length).map(course => {
+              return (
+                <CourseCard
+                  courseNumber={course}
+                  courseName={schedule[course]["title"]}
+                  officeHours={schedule[course]["officeHours"]}
+                  user={user}
+                  isCheckedIn={course === checkedInCourse}
+                  mode="CourseList"
+                />
+              );
+            })}
+          </Column>
+        </Column.Group>
+    );
+} else if (user && schedule) {
+	return (
+		<div className="content">
+			<span className="tip">Add a course to begin</span>
+			<ArrowForwardIcon className="arrow_icon"/>
+		</div>
+	)
+} else {
+	return (
+		<div className="sign_in">
+			<p className="notification">Please sign in to see the course list</p>
+			<Button variant="contained" color="primary" onClick={() => { SignInWithGoogle() }}>Sign In</Button>
+		</div>
+	)
 }
+};
 
 export default CourseList;
