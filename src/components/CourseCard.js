@@ -119,6 +119,7 @@ const CourseCard = ({
   );
   const [count, setCount] = useState(0);
   const [enroll, setEnroll] = useState(isEnrolled);
+  console.log(officeHours)
 
   useEffect(() => {
     //Number Of Students

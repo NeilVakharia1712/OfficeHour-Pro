@@ -4,16 +4,13 @@ import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import CourseCard from './CourseCard';
 import { SignInWithGoogle } from './Login'
 import '../App.css';
+import FormDialog from './editOfficeHours';
 
-const CourseList = ({ user, schedule, courses, checkedInCourse, mode, setMode }) => {
-	const AddCourses = () => {
-		setMode(true);
-	};
-
+const CourseList = ({ user, schedule, courses, checkedInCourse }) => {
 	if (user && schedule && courses && (courses.length !== 0)) {
 		console.log('here');
 		return (
-			<Grid style={{marginTop: '5px'}} className="course-container" container spacing={1}>
+			<Grid style={{ marginTop: '5px' }} className="course-container" item container spacing={1}>
 				{courses.map(course => {
 					return (
 						<Grid key={course} item xs={12} md={6}>
@@ -34,7 +31,8 @@ const CourseList = ({ user, schedule, courses, checkedInCourse, mode, setMode })
 		return (
 			<div className="content">
 				Add a course to begin
-				<ArrowForwardIcon/>
+				<ArrowForwardIcon />
+				<FormDialog />
 			</div>
 		)
 	} else {
