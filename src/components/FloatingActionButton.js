@@ -2,6 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Fab from '@material-ui/core/Fab';
 import EditIcon from '@material-ui/icons/Edit';
+import AddIcon from '@material-ui/icons/Add';
 import CheckIcon from '@material-ui/icons/Check';
 import '../App.css';
 
@@ -37,7 +38,7 @@ const FloatingActionButtons = ({ mode, setMode }) => {
 	return (
 		<div className={classes.root}>
 			<Fab onClick={()=>switchMode()} className={classes.fab} color="secondary" aria-label="edit">
-				{mode?<CheckIcon />:<EditIcon />}
+				{mode?<CheckIcon />:<AddIcon />}
 			</Fab>
 		</div>
 	);

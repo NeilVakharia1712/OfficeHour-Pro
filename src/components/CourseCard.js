@@ -147,8 +147,8 @@ const CourseCard = ({
             count={count}
           />
           <Button
-            variant="outlined"
-            color="secondary"
+            variant= {checkInText==='Check in'?'contained':'outlined'}
+            color = "secondary"
             onClick={() => {
               toggleCheckInOut(user, courseNumber, checkInText, setCheckInText);
             }}
