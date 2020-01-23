@@ -58,11 +58,8 @@ export const areOHOngoing = (courseNumber, officeHours) => {
     ) {
       return {
         isOngoing: true,
-        info: {
-          courseNumber: courseNumber,
-          startTime: potentialOngoingSession.startTime,
-          endTime: potentialOngoingSession.endTime
-        }
+        courseNumber: courseNumber,
+        info: potentialOngoingSession
       };
     }
   }
@@ -72,7 +69,9 @@ export const areOHOngoing = (courseNumber, officeHours) => {
   };
 };
 
-const formatTime = time => {
+export const formatTime = time => {
+  console.log("time", time);
+  if (!time) return;
   const timeArray = time.split(":");
   var timeHour = timeArray[0];
   if (Number(timeHour) > 12) {
@@ -86,7 +85,7 @@ const formatTime = time => {
   return `${timeHour}:${timeMinute}${timeAMPM}`;
 };
 
-const formatFullDayOfWeekString = day => {
+export const formatFullDayOfWeekString = day => {
   switch (day) {
     case "su":
       return "Sunday";
@@ -134,7 +133,7 @@ const findNextOHSession = officeHours => {
     if (weekDay - nowDay >= 0) {
       if (
         !nextSessionThisWeek || // next session hasn't been initialized yet
-        (weekDay - nowDay < nextSessionThisWeek.day - nowDay) ||
+        weekDay - nowDay < nextSessionThisWeek.day - nowDay ||
         (weekDay - nowDay === nextSessionThisWeek.day - nowDay &&
           startHour < nextSessionThisWeek.startHour)
       ) {
@@ -149,7 +148,7 @@ const findNextOHSession = officeHours => {
       // else if the next time this office hours session occurs is next week
       if (
         !firstSessionNextWeek || // next session hasn't been initialized yet
-        (weekDay - nowDay) < (firstSessionNextWeek.day - nowDay) ||
+        weekDay - nowDay < firstSessionNextWeek.day - nowDay ||
         (weekDay - nowDay === firstSessionNextWeek.day - nowDay &&
           startHour < firstSessionNextWeek.startHour)
       ) {
@@ -196,8 +195,15 @@ const OngoingOfficeHours = ({ courseNumber, officeHours, count }) => {
             {formatTime(ongoingSession.info.startTime)} -{" "}
             {formatTime(ongoingSession.info.endTime)}
           </Typography>
-            <p className="des">Current Number of Students:</p>
-            <p className="des count">{count}</p>
+          <p>
+            TA/Professor: {ongoingSession.info.TAProf}
+            <br />
+            Location: {ongoingSession.info.location}
+            <br />
+            Room Capacity: {ongoingSession.info.desiredCapacity}
+          </p>
+          <p className="des">Current Number of Students:</p>
+          <p className="des count">{count}</p>
         </div>
       ) : (
         findNextOHSession(officeHours)

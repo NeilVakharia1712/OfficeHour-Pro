@@ -32,14 +32,14 @@ const CourseList = ({ user, schedule, courses, checkedInCourse, mode, setMode })
 	} else if (user && schedule) {
 		return (
 			<div className="content">
-				<p className="notification">{`You havn't add any courses. Please first add courses.`}</p>
+				<p className="notification">{`You have not added any courses. Add courses to view office hours.`}</p>
 				<Button variant="contained" color="secondary" onClick={() => { AddCourses() }}>Add Courses</Button>
 			</div>
 		)
 	} else {
 		return (
 			<div className="content">
-				<p className="notification">Please Sign in to see the course list</p>
+				<p className="notification">Please sign in to see the course list</p>
 				<Button variant="contained" color="primary" onClick={() => { SignInWithGoogle() }}>Sign In</Button>
 			</div>
 		)
