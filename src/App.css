@@ -2,9 +2,11 @@
   margin: 0;
 	top: auto;
 	right: 90px;
-	bottom: 40px;
+	bottom: 35px;
 	left: auto;
-	position: fixed
+	position: fixed;
+  color: #222;
+  font-weight: 500;
 }
 
 .des {
@@ -30,4 +32,13 @@
 
 .ongoing{
   margin-top: 10px;
+}
+
+.arrow_icon {
+  position: relative;
+  top: 8px;
+}
+
+.tip {
+  margin-right: 6px;
 }

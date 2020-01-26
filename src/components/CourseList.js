@@ -11,7 +11,7 @@ const CourseList = ({ user, schedule, courses, checkedInCourse, mode, setMode })
 	};
 
 	if (user && schedule && courses && (courses.length !== 0)) {
-		console.log('here');
+		console.log(courses);
 		return (
 			<Grid style={{marginTop: '5px'}} className="course-container" container spacing={1}>
 				{courses.map(course => {
@@ -33,8 +33,8 @@ const CourseList = ({ user, schedule, courses, checkedInCourse, mode, setMode })
 	} else if (user && schedule) {
 		return (
 			<div className="content">
-				Add a course to begin
-				<ArrowForwardIcon/>
+				<span className="tip">Add a course to begin</span>
+				<ArrowForwardIcon className="arrow_icon"/>
 			</div>
 		)
 	} else {
