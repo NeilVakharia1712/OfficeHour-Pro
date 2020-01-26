@@ -8,15 +8,12 @@ import {
   Typography,
   Grid,
   Checkbox,
-  Collapse,
-  TableContainer,
-  Table,
-  TableCell,
-  TableBody,
-  TableRow,
-  TableHead
+  ExpansionPanel,
+  ExpansionPanelDetails,
+  ExpansionPanelSummary,
+  Divider
 } from "@material-ui/core";
-import { ExpandMore, ExpandLess } from "@material-ui/icons";
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import "firebase/database";
 import firebase from "firebase/app";
 import OngoingOfficeHours from "./OngoingOfficeHours";
@@ -34,6 +31,10 @@ const useStyles = makeStyles({
   },
   title: {
     fontSize: 14
+  },
+  expandSummary: {
+    fontSize: 14,
+    color: 'grey'
   }
 });
 
@@ -120,7 +121,6 @@ const CourseCard = ({
   );
   const [count, setCount] = useState(0);
   const [enroll, setEnroll] = useState(isEnrolled);
-  const [openLearnMore, setOpenLearnMore] = useState(false);
 
   useEffect(() => {
     //Number Of Students
@@ -150,9 +150,6 @@ const CourseCard = ({
           />
         </CardContent>
         <CardActions>
-          <Button size="small" onClick={() => setOpenLearnMore(!openLearnMore)}>
-            Learn More {openLearnMore ? <ExpandLess /> : <ExpandMore />}
-          </Button>
           <Button
             variant="outlined"
             color="secondary"
@@ -165,46 +162,37 @@ const CourseCard = ({
             {checkInText}
           </Button>
         </CardActions>
-        <Collapse in={openLearnMore} timeout="auto" unmountOnExit>
-          <CardContent>
-            <Typography paragraph>All Office Hours:</Typography>
-            <TableContainer>
-              <Table size="small" aria-label="a dense table">
-                <TableHead>
-                  <TableRow>
-                    <TableCell size="small">Day</TableCell>
-                    <TableCell align="right">Time</TableCell>
-                    <TableCell align="right">TA/Professor</TableCell>
-                    <TableCell align="right">Location</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {Object.keys(officeHours).map(session_id =>
-                    session_id !== "CheckedInUsers" ? (
-                      <TableRow key={session_id}>
-                        <TableCell component="th" scope="row" size="small">
-                          {formatFullDayOfWeekString(
-                            officeHours[session_id].weekDay
-                          )}
-                        </TableCell>
-                        <TableCell align="right">
-                          {formatTime(officeHours[session_id].startTime)} -{" "}
-                          {formatTime(officeHours[session_id].endTime)}
-                        </TableCell>
-                        <TableCell align="right">
-                          {officeHours[session_id].TAProf}
-                        </TableCell>{" "}
-                        <TableCell align="right">
+        <ExpansionPanel>
+          <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content">
+            <Typography className={classes.expandSummary}>All Office Hours:</Typography>
+          </ExpansionPanelSummary>
+          <ExpansionPanelDetails>
+            <Grid container spacing={2}>
+              {Object.keys(officeHours).map(session_id =>
+                session_id !== "CheckedInUsers" ? (
+                    <Grid item container>
+                      <Grid item xs={4}>
+                        <Typography variant='h6'>{formatFullDayOfWeekString(officeHours[session_id].weekDay)}</Typography>
+                      </Grid>
+                      <Grid item xs={8}>
+                        <Typography variant='h6' align='right'>
+                          {formatTime(officeHours[session_id].startTime)} - {formatTime(officeHours[session_id].endTime)}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={6}>
+                        {officeHours[session_id].TAProf}
+                      </Grid>
+                      <Grid item xs={6}>
+                        <Typography variant='body1' align='right'>
                           {officeHours[session_id].location}
-                        </TableCell>
-                      </TableRow>
-                    ) : null
-                  )}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </CardContent>
-        </Collapse>
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                ) : null)
+              }
+            </Grid>
+          </ExpansionPanelDetails>
+        </ExpansionPanel>
       </Card>
     );
   } else {

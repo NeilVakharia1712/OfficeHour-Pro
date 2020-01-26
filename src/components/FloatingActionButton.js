@@ -36,7 +36,7 @@ const FloatingActionButtons = ({ mode, setMode }) => {
 	}
 	return (
 		<div className={classes.root}>
-			<Fab className="floating-button" onClick={()=>switchMode()} className={classes.fab} color="secondary" aria-label="edit">
+			<Fab onClick={()=>switchMode()} className={classes.fab} color="secondary" aria-label="edit">
 				{mode?<CheckIcon />:<EditIcon />}
 			</Fab>
 		</div>
