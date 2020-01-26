@@ -53,8 +53,13 @@ const checked = (user, courseNumber, setEnroll) => {
   setEnroll(true);
 };
 
-const unchecked = (user, courseNumber, setEnroll) => {
+const unchecked = (user, courseNumber, setEnroll, checkInText, setCheckInText) => {
   const ref = firebase.database().ref("Users/" + user.uid);
+  console.log(checkInText)
+  if (checkInText==="Check in") {
+    console.log('remove checked in courses')
+    toggleCheckInOut(user,courseNumber, "Check out", setCheckInText)
+  }
   ref.once("value", snapshot => {
     let courseList = snapshot.val()["courses"];
     let pos = courseList.indexOf(courseNumber);
@@ -207,7 +212,7 @@ const CourseCard = ({
                 checked={enroll}
                 onChange={() => {
                   enroll
-                    ? unchecked(user, courseNumber, setEnroll)
+                    ? unchecked(user, courseNumber, setEnroll, checkInText, setCheckInText)
                     : checked(user, courseNumber, setEnroll);
                 }}
               />

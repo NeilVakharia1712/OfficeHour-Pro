@@ -20,7 +20,6 @@ const CourseList = ({
   };
 
   if (user && schedule && courses && courses.length !== 0) {
-    console.log("here");
     const length = courses.length;
     return (
         <Column.Group style={{ margin: "5px", background: "white" }}>
