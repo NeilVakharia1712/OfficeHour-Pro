@@ -52,4 +52,9 @@
 
 .sign_in .notification {
   font-size: 18px;
+  background-color: #fafafa;
+}
+
+.columns .column {
+  background-color: #fafafa;
 }
