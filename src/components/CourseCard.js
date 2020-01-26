@@ -133,7 +133,7 @@ const CourseCard = ({
 
   if (mode === "CourseList") {
     return (
-      <Card className={classes.card}>
+      <Card className={classes.card} style = {{marginTop: '10px'}}>
         <CardContent>
           <Typography variant="h5" component="h2">
             {courseNumber}
@@ -193,7 +193,7 @@ const CourseCard = ({
     );
   } else {
     return (
-      <Card className={classes.card}>
+      <Card className={classes.card} >
         <CardContent>
           <Grid container>
             <Grid item xs={11}>

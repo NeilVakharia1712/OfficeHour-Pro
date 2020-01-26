@@ -4,7 +4,7 @@ import CourseCard from './CourseCard'
 
 const AllCourseList = ({ schedule, user, courses }) => {
 	console.log(courses)
-	if (schedule) {
+	if (schedule && courses) {
 		return (
 			<Grid style={{marginTop: '5px'}} className="course-container" container spacing={1}>
 				{Object.values(schedule).map(course => {
