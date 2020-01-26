@@ -23,8 +23,8 @@ const CourseList = ({
     console.log("here");
     const length = courses.length;
     return (
-        <Column.Group style={{ marginTop: "5px", background: "white" }}>
-          <Column style={{ paddingTop: "0px", paddingBottom: "0px", paddingLeft: "5px", paddingRight: "5px" }}>
+        <Column.Group style={{ margin: "5px", background: "white" }}>
+          <Column style={{ padding:"0px 5px 0px" }}>
             {courses.slice(0, Math.ceil(length / 2)).map(course => {
               return (
                 <CourseCard
@@ -38,7 +38,7 @@ const CourseList = ({
               );
             })}
           </Column>
-          <Column style={{ paddingTop: "0px", paddingBottom: "0px", paddingLeft: "5px", paddingRight: "5px" }}>
+          <Column style={{ padding:"0px 5px 0px" }}>
             {courses.slice(Math.ceil(length / 2), length).map(course => {
               return (
                 <CourseCard
