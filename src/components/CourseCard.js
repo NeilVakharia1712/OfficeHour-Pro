@@ -11,7 +11,6 @@ import {
   ExpansionPanel,
   ExpansionPanelDetails,
   ExpansionPanelSummary,
-  Divider
 } from "@material-ui/core";
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import "firebase/database";
@@ -26,8 +25,7 @@ import "../App.css";
 
 const useStyles = makeStyles({
   card: {
-    minWidth: 325,
-    maxWidth: 500
+    minWidth: 325
   },
   title: {
     fontSize: 14

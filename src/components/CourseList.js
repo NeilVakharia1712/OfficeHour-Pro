@@ -12,10 +12,10 @@ const CourseList = ({ user, schedule, courses, checkedInCourse, mode, setMode })
 	if (user && schedule && courses && (courses.length !== 0)) {
 		console.log('here');
 		return (
-			<Grid className="course-container" container spacing={1}>
+			<Grid style={{marginTop: '5px'}} className="course-container" container spacing={1}>
 				{courses.map(course => {
 					return (
-						<Grid key={course} item xs={12}>
+						<Grid key={course} item xs={12} md={6}>
 							<CourseCard
 								courseNumber={course}
 								courseName={schedule[course]['title']}
