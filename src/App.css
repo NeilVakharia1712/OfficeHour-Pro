@@ -5,7 +5,7 @@
 	bottom: 35px;
 	left: auto;
 	position: fixed;
-  color: #222;
+  color: #555;
   font-weight: 500;
 }
 
@@ -36,9 +36,20 @@
 
 .arrow_icon {
   position: relative;
-  top: 8px;
+  top: 7px;
 }
 
 .tip {
   margin-right: 6px;
+  font-size: 16px;
+}
+
+.sign_in {
+  text-align: center;
+  color: #555;
+  margin-top: 5%;
+}
+
+.sign_in .notification {
+  font-size: 18px;
 }

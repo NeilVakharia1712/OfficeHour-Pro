@@ -39,7 +39,7 @@ const CourseList = ({ user, schedule, courses, checkedInCourse, mode, setMode })
 		)
 	} else {
 		return (
-			<div className="content">
+			<div className="sign_in">
 				<p className="notification">Please sign in to see the course list</p>
 				<Button variant="contained" color="primary" onClick={() => { SignInWithGoogle() }}>Sign In</Button>
 			</div>
