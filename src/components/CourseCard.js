@@ -146,8 +146,6 @@ const CourseCard = ({
             officeHours={officeHours}
             count={count}
           />
-        </CardContent>
-        <CardActions>
           <Button
             variant="outlined"
             color="secondary"
@@ -159,7 +157,7 @@ const CourseCard = ({
           >
             {checkInText}
           </Button>
-        </CardActions>
+        </CardContent>
         <ExpansionPanel>
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content">
             <Typography className={classes.expandSummary}>All Office Hours:</Typography>

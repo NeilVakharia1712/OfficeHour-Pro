@@ -1,5 +1,6 @@
 import React from "react";
 import Typography from "@material-ui/core/Typography";
+import { Grid } from "@material-ui/core"
 
 const getCurrentTime = () => {
   const now = new Date();
@@ -189,25 +190,34 @@ const OngoingOfficeHours = ({ courseNumber, officeHours, count }) => {
   return (
     <div>
       {ongoingSession.isOngoing ? (
-        <div>
-          <Typography variant="body2" component="p">
-            Ongoing Office Hours Session:{" "}
-            {formatTime(ongoingSession.info.startTime)} -{" "}
-            {formatTime(ongoingSession.info.endTime)}
+        <div className="ongoing">
+          <Typography variant="body1" component="p">
+            Ongoing Office Hours:
           </Typography>
-          <p>
-            TA/Professor: {ongoingSession.info.TAProf}
-            <br />
-            Location: {ongoingSession.info.location}
-            <br />
-            Room Capacity: {ongoingSession.info.desiredCapacity}
-          </p>
-          <p className="des">Current Number of Students:</p>
-          <p className="des count">{count}</p>
+          <Grid item container>
+            <Grid item xs={8}>
+              <Typography variant='h6'>
+                {formatTime(ongoingSession.info.startTime)} - {formatTime(ongoingSession.info.endTime)}
+              </Typography>
+            </Grid>
+            <Grid item xs={4}>
+              <Typography variant='h6' align='right'>
+                Current People: {count}/{ongoingSession.info.desiredCapacity}
+              </Typography>
+            </Grid>
+            <Grid item xs={6}>
+              {ongoingSession.info.TAProf}
+            </Grid>
+            <Grid item xs={6}>
+              <Typography variant='body1' align='right'>
+                {ongoingSession.info.location}
+              </Typography>
+            </Grid>
+          </Grid>
         </div>
       ) : (
-        findNextOHSession(officeHours)
-      )}
+          findNextOHSession(officeHours)
+        )}
     </div>
   );
 };
