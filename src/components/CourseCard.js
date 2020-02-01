@@ -56,9 +56,9 @@ const checked = (user, courseNumber, setEnroll) => {
 const unchecked = (user, courseNumber, setEnroll, checkInText, setCheckInText) => {
   const ref = firebase.database().ref("Users/" + user.uid);
   console.log(checkInText)
-  if (checkInText==="Check in") {
+  if (checkInText === "Check in") {
     console.log('remove checked in courses')
-    toggleCheckInOut(user,courseNumber, "Check out", setCheckInText)
+    toggleCheckInOut(user, courseNumber, "Check out", setCheckInText)
   }
   ref.once("value", snapshot => {
     let courseList = snapshot.val()["courses"];
@@ -138,7 +138,7 @@ const CourseCard = ({
 
   if (mode === "CourseList") {
     return (
-      <Card className={classes.card} style = {{marginTop: '10px'}}>
+      <Card className={classes.card} style={{ marginTop: '10px' }}>
         <CardContent>
           <Typography variant="h5" component="h2">
             {courseNumber}
@@ -147,21 +147,23 @@ const CourseCard = ({
             {courseName}
           </Typography>
           <OngoingOfficeHours
+            className="ongoing"
             courseNumber={courseNumber}
             officeHours={officeHours}
             count={count}
-          />
-          <Button
-            variant= {checkInText==='Check in'?'contained':'outlined'}
-            color = "secondary"
-            onClick={() => {
-              toggleCheckInOut(user, courseNumber, checkInText, setCheckInText);
-            }}
-            size="small"
-            disabled={!areOHOngoing(courseNumber, officeHours).isOngoing}
           >
-            {checkInText}
-          </Button>
+            <Button
+              variant='text'
+              color="secondary"
+              onClick={() => {
+                toggleCheckInOut(user, courseNumber, checkInText, setCheckInText);
+              }}
+              disabled={!areOHOngoing(courseNumber, officeHours).isOngoing}
+              style={{width:'100%'}}
+            >
+              {checkInText}
+            </Button>
+          </OngoingOfficeHours>
         </CardContent>
         <ExpansionPanel>
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content">
@@ -171,24 +173,24 @@ const CourseCard = ({
             <Grid container spacing={2}>
               {Object.keys(officeHours).map(session_id =>
                 session_id !== "CheckedInUsers" ? (
-                    <Grid item container>
-                      <Grid item xs={4}>
-                        <Typography variant='h6'>{formatFullDayOfWeekString(officeHours[session_id].weekDay)}</Typography>
-                      </Grid>
-                      <Grid item xs={8}>
-                        <Typography variant='h6' align='right'>
-                          {formatTime(officeHours[session_id].startTime)} - {formatTime(officeHours[session_id].endTime)}
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={6}>
-                        {officeHours[session_id].TAProf}
-                      </Grid>
-                      <Grid item xs={6}>
-                        <Typography variant='body1' align='right'>
-                          {officeHours[session_id].location}
-                        </Typography>
-                      </Grid>
+                  <Grid item container>
+                    <Grid item xs={4}>
+                      <Typography variant='h6'>{formatFullDayOfWeekString(officeHours[session_id].weekDay)}</Typography>
                     </Grid>
+                    <Grid item xs={8}>
+                      <Typography variant='h6' align='right'>
+                        {formatTime(officeHours[session_id].startTime)} - {formatTime(officeHours[session_id].endTime)}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={6}>
+                      {officeHours[session_id].TAProf}
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Typography variant='body1' align='right'>
+                        {officeHours[session_id].location}
+                      </Typography>
+                    </Grid>
+                  </Grid>
                 ) : null)
               }
             </Grid>

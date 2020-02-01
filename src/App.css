@@ -30,8 +30,15 @@
   z-index: 999;
 }
 
-.ongoing{
-  margin-top: 10px;
+.MuiCardContent-root .MuiCard-root{
+  margin: 10px 0px 10px 0px;
+  border: 1px solid;
+  color: #f50056;
+  border-radius: 7px;
+}
+
+.MuiCardContent-root .MuiCard-root .MuiCardContent-root{
+  padding: 10px;
 }
 
 .arrow_icon {
