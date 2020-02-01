@@ -1,8 +1,6 @@
 import React from "react";
 import Typography from "@material-ui/core/Typography";
 import { Grid, Divider, Card, CardContent } from "@material-ui/core"
-import AccessTimeIcon from '@material-ui/icons/AccessTime';
-import LocationOnIcon from '@material-ui/icons/LocationOn';
 
 const getCurrentTime = () => {
   const now = new Date();
@@ -193,41 +191,41 @@ const OngoingOfficeHours = props => {
       {ongoingSession.isOngoing ? (
         <Card variant='outlined'>
           <CardContent>
-            <Grid container>
-              <Grid item container xs={8}>
+            <Grid container item>
+              <Grid item xs={8}>
                 <Typography variant="body1" component="p">
                   Ongoing Office Hours:
                 </Typography>
               </Grid>
-              <Grid item container xs={4}>
+              <Grid item xs={4}>
                 <Typography variant='caption' align='right' style={{width:'100%'}}>
                   Current Student
                 </Typography>
               </Grid>
-              <Grid item container xs={8}>
+              <Grid item xs={8}>
                 <Typography variant='h6'>
                   {formatTime(ongoingSession.info.startTime)} - {formatTime(ongoingSession.info.endTime)}
                 </Typography>
               </Grid>
-              <Grid item container xs={4}>
+              <Grid item xs={4}>
                 <Typography variant='h6' align='right' style={{width:'100%'}}>
                   {props.count}/{ongoingSession.info.desiredCapacity}
                 </Typography>
               </Grid>
-              <Grid item container xs={12}>
+              <Grid item xs={12}>
                 <Typography variant='body1'>
                   {ongoingSession.info.location}
                 </Typography>
               </Grid>
-              <Grid item container xs={12}>
-                <Typography variant='body1'>
+              <Grid item xs={12}>
+                <Typography variant='body1' style={{width:'100%'}}>
                   {ongoingSession.info.TAProf}
                 </Typography>
               </Grid>
             </Grid>
           </CardContent>
           <Divider />
-          <Grid container xs={12} alignItems='center'>
+          <Grid item xs={12}>
             {props.children}
           </Grid>
         </Card>

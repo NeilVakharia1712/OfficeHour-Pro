@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Card,
-  CardActions,
   CardContent,
   Button,
   Typography,
@@ -90,7 +89,7 @@ const toggleCheckInOut = (user, courseNumber, checkInText, setCheckInText) => {
       .update({
         checkedInCourse: courseNumber
       });
-
+    document.getElementsByClassName('MuiCardContent-root MuiCard-root').style.color = '#9e9e9e'
     setCheckInText("Check out");
   } else if (checkInText === "Check out") {
     firebase
@@ -106,6 +105,7 @@ const toggleCheckInOut = (user, courseNumber, checkInText, setCheckInText) => {
       .remove();
 
     setCheckInText("Check in");
+    document.getElementsByClassName('MuiCardContent-root MuiCard-root').style.color = '#f50056'
   }
 };
 
@@ -173,7 +173,7 @@ const CourseCard = ({
             <Grid container spacing={2}>
               {Object.keys(officeHours).map(session_id =>
                 session_id !== "CheckedInUsers" ? (
-                  <Grid item container>
+                  <Grid item container key={session_id}>
                     <Grid item xs={4}>
                       <Typography variant='h6'>{formatFullDayOfWeekString(officeHours[session_id].weekDay)}</Typography>
                     </Grid>
