@@ -4,7 +4,6 @@ import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import CourseCard from './CourseCard';
 import { SignInWithGoogle } from './Login'
 import '../App.css';
-import FormDialog from './editOfficeHours';
 
 const CourseList = ({ user, schedule, courses, checkedInCourse }) => {
 	if (user && schedule && courses && (courses.length !== 0)) {
@@ -32,7 +31,6 @@ const CourseList = ({ user, schedule, courses, checkedInCourse }) => {
 			<div className="content">
 				Add a course to begin
 				<ArrowForwardIcon />
-				<FormDialog />
 			</div>
 		)
 	} else {
