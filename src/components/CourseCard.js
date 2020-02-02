@@ -116,7 +116,15 @@ const editOfficeHourSession = (sessionId,  officeHourSession, courseNumber) => {
   })
 }
 
-
+const deleteOHSession = (courseNumber, sessionId, setCourse) => {
+  firebase
+    .database()
+    .ref("courses/" + courseNumber + "/officeHours")
+    .child(sessionId)
+    .remove().then(() => {
+      console.log("refresh");
+    });
+}
 
 const toggleCheckInOut = (user, courseNumber, checkInText, setCheckInText) => {
   if (checkInText === "Check in") {
@@ -150,16 +158,6 @@ const toggleCheckInOut = (user, courseNumber, checkInText, setCheckInText) => {
     setCheckInText("Check in");
   }
 };
-
-const deleteOHSession = (courseNumber, sessionId, setCourse) => {
-  firebase
-    .database()
-    .ref("courses/" + courseNumber + "/officeHours")
-    .child(sessionId)
-    .remove().then(() => {
-      console.log("refresh");
-    });
-}
 
 const CourseCard = ({
   user,
