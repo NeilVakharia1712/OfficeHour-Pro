@@ -79,7 +79,7 @@ const officeHourSession = {
   endTime: "17:00",
   location: "Mudd 3106",
   startTime: "14:00",
-  weekDay: "mo"
+  weekDay: "we"
 }
 
 const addOfficeHourSession = (officeHourSession, courseNumber) => {
@@ -100,8 +100,20 @@ const addOfficeHourSession = (officeHourSession, courseNumber) => {
   })
 }
 
-const editOfficeHourSession = () => {
-
+const editOfficeHourSession = (sessionId,  officeHourSession, courseNumber) => {
+  const ref = firebase.database().ref("courses/" + courseNumber);
+  ref.once("value", snapshot => {
+    var data = {
+      TAProf: officeHourSession.TAProf,
+      endTime: officeHourSession.endTime,
+      location: officeHourSession.location,
+      startTime: officeHourSession.startTime,
+      weekDay: officeHourSession.weekDay
+    };
+    var editSession = {};
+    editSession["officeHours/" + sessionId] = data;
+    ref.update(editSession)
+  })
 }
 
 
@@ -227,7 +239,7 @@ const CourseCard = ({
           </ExpansionPanelDetails>
         </ExpansionPanel>
         <Button onClick = {()=> {
-              addOfficeHourSession(officeHourSession, courseNumber)
+              editOfficeHourSession("4043bd4f-6595-475f-a9a9-80634bad364f", officeHourSession, courseNumber)
             }}>test</Button>
       </Card>
     );
