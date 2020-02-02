@@ -1,5 +1,5 @@
 import React from 'react'
-import { Grid, Button } from '@material-ui/core';
+import { Button } from '@material-ui/core';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import CourseCard from './CourseCard';
 import { SignInWithGoogle } from './Login'
@@ -20,7 +20,6 @@ const CourseList = ({
   };
 
   if (user && schedule && courses && courses.length !== 0) {
-    console.log("here");
     const length = courses.length;
     return (
         <Column.Group style={{ margin: "5px", background: "white" }}>
@@ -28,6 +27,7 @@ const CourseList = ({
             {courses.slice(0, Math.ceil(length / 2)).map(course => {
               return (
                 <CourseCard
+                  key={course}
                   courseNumber={course}
                   courseName={schedule[course]["title"]}
                   officeHours={schedule[course]["officeHours"]}
@@ -42,6 +42,7 @@ const CourseList = ({
             {courses.slice(Math.ceil(length / 2), length).map(course => {
               return (
                 <CourseCard
+                  key={course}
                   courseNumber={course}
                   courseName={schedule[course]["title"]}
                   officeHours={schedule[course]["officeHours"]}

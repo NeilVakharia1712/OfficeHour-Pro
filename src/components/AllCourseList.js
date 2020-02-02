@@ -3,10 +3,9 @@ import { Grid } from '@material-ui/core'
 import CourseCard from './CourseCard'
 
 const AllCourseList = ({ schedule, user, courses }) => {
-	console.log(courses)
 	if (schedule && courses) {
 		return (
-			<Grid style={{marginTop: '5px'}} className="course-container" container spacing={1}>
+			<Grid style={{ padding:"15px 10px 15px 10px" }} className="course-container" container spacing={1}>
 				{Object.values(schedule).map(course => {
 					return (
 						<Grid key={course['id']} item xs={12} md={6}>
