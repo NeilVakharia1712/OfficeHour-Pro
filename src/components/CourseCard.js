@@ -248,9 +248,6 @@ const CourseCard = ({
             </Grid>
           </ExpansionPanelDetails>
         </ExpansionPanel>
-        <Button onClick = {()=> {
-              editOfficeHourSession("4043bd4f-6595-475f-a9a9-80634bad364f", officeHourSession, courseNumber)
-            }}>test</Button>
       </Card>
     );
   } else {
