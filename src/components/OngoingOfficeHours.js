@@ -197,7 +197,7 @@ const OngoingOfficeHours = props => {
                   Ongoing Office Hours:
                 </Typography>
               </Grid>
-              <Grid item xs={4}>
+              <Grid item container xs={4}>
                 <Typography variant='caption' align='right' style={{width:'100%'}}>
                   Current Student
                 </Typography>

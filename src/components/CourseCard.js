@@ -89,7 +89,6 @@ const toggleCheckInOut = (user, courseNumber, checkInText, setCheckInText) => {
       .update({
         checkedInCourse: courseNumber
       });
-    document.getElementsByClassName('MuiCardContent-root MuiCard-root').style.color = '#9e9e9e'
     setCheckInText("Check out");
   } else if (checkInText === "Check out") {
     firebase
@@ -105,7 +104,6 @@ const toggleCheckInOut = (user, courseNumber, checkInText, setCheckInText) => {
       .remove();
 
     setCheckInText("Check in");
-    document.getElementsByClassName('MuiCardContent-root MuiCard-root').style.color = '#f50056'
   }
 };
 
@@ -154,7 +152,7 @@ const CourseCard = ({
             count={count}
           >
             <Button
-              variant='text'
+              variant='contained'
               color="secondary"
               onClick={() => {
                 toggleCheckInOut(user, courseNumber, checkInText, setCheckInText);
