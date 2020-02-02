@@ -151,6 +151,16 @@ const toggleCheckInOut = (user, courseNumber, checkInText, setCheckInText) => {
   }
 };
 
+const deleteOHSession = (courseNumber, sessionId, setCourse) => {
+  firebase
+    .database()
+    .ref("courses/" + courseNumber + "/officeHours")
+    .child(sessionId)
+    .remove().then(() => {
+      console.log("refresh");
+    });
+}
+
 const CourseCard = ({
   user,
   courseName,
@@ -158,7 +168,8 @@ const CourseCard = ({
   officeHours,
   isCheckedIn,
   mode,
-  isEnrolled = false
+  isEnrolled = false,
+  setCourse
 }) => {
   const classes = useStyles();
   const [checkInText, setCheckInText] = useState(
@@ -168,7 +179,6 @@ const CourseCard = ({
   const [enroll, setEnroll] = useState(isEnrolled);
 
   useEffect(() => {
-    //Number Of Students
     const ref = firebase
       .database()
       .ref("courses/" + courseNumber + "/officeHours/CheckedInUsers");
@@ -230,6 +240,15 @@ const CourseCard = ({
                     <Grid item xs={6}>
                       <Typography variant='body1' align='right'>
                         {officeHours[session_id].location}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={6}></Grid>
+                    <Grid item xs={6}>
+                      <Typography variant='body1' align='right'>
+                        <Button
+                          variant='text'
+                          color='secondary'
+                          onClick={() => {deleteOHSession(courseNumber, session_id, setCourse)}}>Delete</Button>
                       </Typography>
                     </Grid>
                   </Grid>

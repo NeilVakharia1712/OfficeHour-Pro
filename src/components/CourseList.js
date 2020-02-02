@@ -11,6 +11,7 @@ const CourseList = ({
   user,
   schedule,
   courses,
+  setCourse,
   checkedInCourse,
   mode,
   setMode
@@ -34,6 +35,7 @@ const CourseList = ({
                   user={user}
                   isCheckedIn={course === checkedInCourse}
                   mode="CourseList"
+                  setCourse={setCourse}
                 />
               );
             })}
