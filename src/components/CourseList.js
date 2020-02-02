@@ -7,7 +7,6 @@ import '../App.css';
 
 const CourseList = ({ user, schedule, courses, checkedInCourse }) => {
 	if (user && schedule && courses && (courses.length !== 0)) {
-		console.log('here');
 		return (
 			<Grid style={{ marginTop: '5px' }} className="course-container" item container spacing={1}>
 				{courses.map(course => {

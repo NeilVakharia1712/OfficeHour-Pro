@@ -33,7 +33,6 @@ const FloatingActionButtons = ({ mode, setMode }) => {
 		}else{
 			setMode(false)
 		}
-		console.log(mode)
 	}
 	return (
 		<div className={classes.root}>

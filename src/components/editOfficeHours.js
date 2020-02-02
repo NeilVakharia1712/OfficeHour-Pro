@@ -8,6 +8,11 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 const FormDialog = () => {
 	const [open, setOpen] = React.useState(false);
 	const [weekday, setWeekday] = React.useState('mo');
+	const [instructor, setInstructor] = React.useState('')
+	const [email, setEmail] = React.useState('')
+	const [start, setStart] = React.useState('00:00 AM')
+	const [end, setEnd] = React.useState('00:00 AM')
+	const [location, setLocation] = React.useState('')
 
 	const handleClickOpen = () => {
 		setOpen(true);
@@ -18,9 +23,30 @@ const FormDialog = () => {
 	};
 
 	const handleChangeWeekday = event => {
-    setWeekday(event.target.value);
+		setWeekday(event.target.value);
 	};
-	
+
+	const handleChangeInstructor = event => {
+		setInstructor(event.target.value)
+	}
+
+	const handleChangeEmail = event => {
+		setEmail(event.target.value)
+	}
+
+	const handleChangeStart = event => {
+		console.log(event.target.value)
+		setStart(event.target.value)
+	}
+
+	const handleChangeEnd = event => {
+		setEnd(event.target.value)
+	}
+
+	const handleChangeLocation = event => {
+		setLocation(event.target.value)
+	}
+
 	return (
 		<div>
 			<Button variant="outlined" color="primary" onClick={handleClickOpen}>
@@ -34,16 +60,15 @@ const FormDialog = () => {
 			>
 				<DialogTitle id="alert-dialog-title">Edit Office Hours</DialogTitle>
 				<DialogContent>
-					<form noValidate autoComplete="off">
-						<List style = {{paddingTop: '0%'}}>
-							<ListItem>
-								<TextField id="standard-basic" label="Instructor" />
-							</ListItem>
-							<ListItem>
-								<TextField id="standard-basic" label="Instructor Email" />
-							</ListItem>
-							<ListItem>
-								<RadioGroup row aria-label="gender" name="gender2" value={weekday} onChange={handleChangeWeekday}>
+					<List>
+						<ListItem>
+							<TextField id="standard-basic" label="Instructor" value={instructor} onChange={handleChangeInstructor}/>
+						</ListItem>
+						<ListItem>
+							<TextField id="standard-basic" label="Instructor Email" value={email} onChange={handleChangeEmail}/>
+						</ListItem>
+						<ListItem>
+							<RadioGroup row aria-label="gender" name="gender2" value={weekday} onChange={handleChangeWeekday}>
 								<FormControlLabel
 									value="mo"
 									control={<Radio color="primary" />}
@@ -69,41 +94,44 @@ const FormDialog = () => {
 									control={<Radio color="primary" />}
 									label="Fr"
 								/>
-								</RadioGroup>
-							</ListItem>
-							<ListItem>
-								<TextField
-									id="time"
-									label="Start Time"
-									type="time"
-									defaultValue="07:30"
-									InputLabelProps={{
+							</RadioGroup>
+						</ListItem>
+						<ListItem>
+							<TextField
+								id="time"
+								label="Start Time"
+								type="time"
+								defaultValue="07:30"
+								InputLabelProps={{
 									shrink: true,
-									}}
-									inputProps={{
+								}}
+								inputProps={{
 									step: 300, // 5 min
-									}}
-								/>
-							</ListItem>
-							<ListItem>
-								<TextField
-									id="time"
-									label="End Time"
-									type="time"
-									defaultValue="07:30"
-									InputLabelProps={{
+								}}
+								onChange={handleChangeStart}
+							
+							/>
+						</ListItem>
+						<ListItem>
+							<TextField
+								id="time"
+								label="End Time"
+								type="time"
+								defaultValue="07:30"
+								InputLabelProps={{
 									shrink: true,
-									}}
-									inputProps={{
-										step: 300, // 5 min
-									}}
-								/>
-							</ListItem>
-							<ListItem>
-								<TextField id="standard-basic" label="Location" />
-							</ListItem>
-						</List>
-					</form>
+								}}
+								inputProps={{
+									step: 300, // 5 min
+								}}
+								onChange={handleChangeEnd}
+								
+							/>
+						</ListItem>
+						<ListItem>
+							<TextField id="standard-basic" label="Location" value={location} onChange={handleChangeLocation}/>
+						</ListItem>
+					</List>
 				</DialogContent>
 			</Dialog>
 		</div>

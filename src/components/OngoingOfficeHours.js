@@ -71,7 +71,6 @@ export const areOHOngoing = (courseNumber, officeHours) => {
 };
 
 export const formatTime = time => {
-  console.log("time", time);
   if (!time) return;
   const timeArray = time.split(":");
   var timeHour = timeArray[0];

@@ -3,7 +3,6 @@ import { Grid } from '@material-ui/core'
 import CourseCard from './CourseCard'
 
 const AllCourseList = ({ schedule, user, courses }) => {
-	console.log(courses)
 	if (schedule) {
 		return (
 			<Grid style={{marginTop: '5px'}} className="course-container" container spacing={1}>
