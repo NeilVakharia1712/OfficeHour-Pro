@@ -74,6 +74,58 @@ const unchecked = (user, courseNumber, setEnroll, checkInText, setCheckInText) =
   setEnroll(false);
 };
 
+const officeHourSession = {
+  TAProf: "Irina",
+  endTime: "17:00",
+  location: "Mudd 3106",
+  startTime: "14:00",
+  weekDay: "we"
+}
+
+const addOfficeHourSession = (officeHourSession, courseNumber) => {
+  const ref = firebase.database().ref("courses/" + courseNumber);
+  const uuidv4 = require('uuid/v4');
+  const sessionId = uuidv4();
+  ref.once("value", snapshot => {
+    var data = {
+      TAProf: officeHourSession.TAProf,
+      endTime: officeHourSession.endTime,
+      location: officeHourSession.location,
+      startTime: officeHourSession.startTime,
+      weekDay: officeHourSession.weekDay
+    };
+    var newSession = {};
+    newSession['officeHours/'+ sessionId] = data;
+    ref.update(newSession)
+  })
+}
+
+const editOfficeHourSession = (sessionId,  officeHourSession, courseNumber) => {
+  const ref = firebase.database().ref("courses/" + courseNumber);
+  ref.once("value", snapshot => {
+    var data = {
+      TAProf: officeHourSession.TAProf,
+      endTime: officeHourSession.endTime,
+      location: officeHourSession.location,
+      startTime: officeHourSession.startTime,
+      weekDay: officeHourSession.weekDay
+    };
+    var editSession = {};
+    editSession["officeHours/" + sessionId] = data;
+    ref.update(editSession)
+  })
+}
+
+const deleteOHSession = (courseNumber, sessionId, setCourse) => {
+  firebase
+    .database()
+    .ref("courses/" + courseNumber + "/officeHours")
+    .child(sessionId)
+    .remove().then(() => {
+      console.log("refresh");
+    });
+}
+
 const toggleCheckInOut = (user, courseNumber, checkInText, setCheckInText) => {
   if (checkInText === "Check in") {
     firebase
@@ -114,7 +166,8 @@ const CourseCard = ({
   officeHours,
   isCheckedIn,
   mode,
-  isEnrolled = false
+  isEnrolled = false,
+  setCourse
 }) => {
   const classes = useStyles();
   const [checkInText, setCheckInText] = useState(
@@ -124,7 +177,6 @@ const CourseCard = ({
   const [enroll, setEnroll] = useState(isEnrolled);
 
   useEffect(() => {
-    //Number Of Students
     const ref = firebase
       .database()
       .ref("courses/" + courseNumber + "/officeHours/CheckedInUsers");
@@ -151,7 +203,7 @@ const CourseCard = ({
             count={count}
           >
             <Button
-              variant='contained'
+              variant="contained"
               color="secondary"
               onClick={() => {
                 toggleCheckInOut(user, courseNumber, checkInText, setCheckInText);
@@ -188,12 +240,24 @@ const CourseCard = ({
                         {officeHours[session_id].location}
                       </Typography>
                     </Grid>
+                    <Grid item xs={6}></Grid>
+                    <Grid item xs={6}>
+                      <Typography variant='body1' align='right'>
+                        <Button
+                          variant='text'
+                          color='secondary'
+                          onClick={() => {deleteOHSession(courseNumber, session_id, setCourse)}}>Delete</Button>
+                      </Typography>
+                    </Grid>
                   </Grid>
                 ) : null)
               }
             </Grid>
           </ExpansionPanelDetails>
         </ExpansionPanel>
+        <Button onClick = {()=> {
+              editOfficeHourSession("4043bd4f-6595-475f-a9a9-80634bad364f", officeHourSession, courseNumber)
+            }}>test</Button>
       </Card>
     );
   } else {
