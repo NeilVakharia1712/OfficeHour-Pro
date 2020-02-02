@@ -74,14 +74,6 @@ const unchecked = (user, courseNumber, setEnroll, checkInText, setCheckInText) =
   setEnroll(false);
 };
 
-const officeHourSession = {
-  TAProf: "Irina",
-  endTime: "17:00",
-  location: "Mudd 3106",
-  startTime: "14:00",
-  weekDay: "we"
-}
-
 const addOfficeHourSession = (officeHourSession, courseNumber) => {
   const ref = firebase.database().ref("courses/" + courseNumber);
   const uuidv4 = require('uuid/v4');
