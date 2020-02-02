@@ -2,9 +2,11 @@
   margin: 0;
 	top: auto;
 	right: 90px;
-	bottom: 40px;
+	bottom: 35px;
 	left: auto;
-	position: fixed
+	position: fixed;
+  color: #555;
+  font-weight: 500;
 }
 
 .des {
@@ -28,6 +30,38 @@
   z-index: 999;
 }
 
-.ongoing{
-  margin-top: 10px;
+.MuiCardContent-root .MuiCard-root{
+  margin: 10px 0px 10px 0px;
+  border: 1px solid;
+  color: #f50056;
+  border-radius: 7px;
+}
+
+.MuiCardContent-root .MuiCard-root .MuiCardContent-root{
+  padding: 10px;
+}
+
+.arrow_icon {
+  position: relative;
+  top: 7px;
+}
+
+.tip {
+  margin-right: 6px;
+  font-size: 16px;
+}
+
+.sign_in {
+  text-align: center;
+  color: #555;
+  margin-top: 5%;
+}
+
+.sign_in .notification {
+  font-size: 18px;
+  background-color: #fafafa;
+}
+
+.columns .column {
+  background-color: #fafafa;
 }

@@ -10,8 +10,8 @@ const FormDialog = () => {
 	const [weekday, setWeekday] = React.useState('mo');
 	const [instructor, setInstructor] = React.useState('')
 	const [email, setEmail] = React.useState('')
-	const [start, setStart] = React.useState('00:00 AM')
-	const [end, setEnd] = React.useState('00:00 AM')
+	const [start, setStart] = React.useState('00:00')
+	const [end, setEnd] = React.useState('00:00')
 	const [location, setLocation] = React.useState('')
 
 	const handleClickOpen = () => {
@@ -62,10 +62,10 @@ const FormDialog = () => {
 				<DialogContent>
 					<List>
 						<ListItem>
-							<TextField id="standard-basic" label="Instructor" value={instructor} onChange={handleChangeInstructor}/>
+							<TextField varient='outlined' id="standard-basic" label="Instructor" value={instructor} onChange={handleChangeInstructor}/>
 						</ListItem>
 						<ListItem>
-							<TextField id="standard-basic" label="Instructor Email" value={email} onChange={handleChangeEmail}/>
+							<TextField varient='outlined' id="standard-basic" label="Instructor Email" value={email} onChange={handleChangeEmail}/>
 						</ListItem>
 						<ListItem>
 							<RadioGroup row aria-label="gender" name="gender2" value={weekday} onChange={handleChangeWeekday}>
@@ -98,10 +98,10 @@ const FormDialog = () => {
 						</ListItem>
 						<ListItem>
 							<TextField
+								varient='outlined'
 								id="time"
 								label="Start Time"
 								type="time"
-								defaultValue="07:30"
 								InputLabelProps={{
 									shrink: true,
 								}}
@@ -109,15 +109,15 @@ const FormDialog = () => {
 									step: 300, // 5 min
 								}}
 								onChange={handleChangeStart}
-							
+								value={start}
 							/>
 						</ListItem>
 						<ListItem>
 							<TextField
+								varient='outlined'
 								id="time"
 								label="End Time"
 								type="time"
-								defaultValue="07:30"
 								InputLabelProps={{
 									shrink: true,
 								}}
@@ -125,11 +125,11 @@ const FormDialog = () => {
 									step: 300, // 5 min
 								}}
 								onChange={handleChangeEnd}
-								
+								value={end}
 							/>
 						</ListItem>
 						<ListItem>
-							<TextField id="standard-basic" label="Location" value={location} onChange={handleChangeLocation}/>
+							<TextField varient='outlined' id="standard-basic" label="Location" value={location} onChange={handleChangeLocation}/>
 						</ListItem>
 					</List>
 				</DialogContent>
