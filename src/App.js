@@ -7,6 +7,7 @@ import CourseList from './components/CourseList';
 import './App.css';
 import FloatingActionButtons from './components/FloatingActionButton';
 import AllCourseList from './components/AllCourseList';
+import FormDialog from './components/editOfficeHours';
 
 const firebaseConfig = {
 	apiKey: "AIzaSyD4Ph2v9VLa0EkAcyVNVV4D31xTc6z7cak",
@@ -66,6 +67,7 @@ const App = () => {
 	return (
 		<Container disableGutters>
 			<ButtonAppBar user={user} />
+			<FormDialog />
 			<Slide direction="left" in={!mode} mountOnEnter unmountOnExit>
 				<div><CourseList user={user} schedule={schedule} courses={courses} setCourse={setCourse} checkedInCourse={checkedInCourse} mode={mode} setMode={setMode} /></div>
 			</Slide>
