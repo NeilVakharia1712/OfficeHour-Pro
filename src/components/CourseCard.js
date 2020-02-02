@@ -74,6 +74,38 @@ const unchecked = (user, courseNumber, setEnroll, checkInText, setCheckInText) =
   setEnroll(false);
 };
 
+const officeHourSession = {
+  TAProf: "Irina",
+  endTime: "17:00",
+  location: "Mudd 3106",
+  startTime: "14:00",
+  weekDay: "mo"
+}
+
+const addOfficeHourSession = (officeHourSession, courseNumber) => {
+  const ref = firebase.database().ref("courses/" + courseNumber);
+  const uuidv4 = require('uuid/v4');
+  const sessionId = uuidv4();
+  ref.once("value", snapshot => {
+    var data = {
+      TAProf: officeHourSession.TAProf,
+      endTime: officeHourSession.endTime,
+      location: officeHourSession.location,
+      startTime: officeHourSession.startTime,
+      weekDay: officeHourSession.weekDay
+    };
+    var newSession = {};
+    newSession['officeHours/'+ sessionId] = data;
+    ref.update(newSession)
+  })
+}
+
+const editOfficeHourSession = () => {
+
+}
+
+
+
 const toggleCheckInOut = (user, courseNumber, checkInText, setCheckInText) => {
   if (checkInText === "Check in") {
     firebase
@@ -89,7 +121,6 @@ const toggleCheckInOut = (user, courseNumber, checkInText, setCheckInText) => {
       .update({
         checkedInCourse: courseNumber
       });
-    document.getElementsByClassName('MuiCardContent-root MuiCard-root').style.color = '#9e9e9e'
     setCheckInText("Check out");
   } else if (checkInText === "Check out") {
     firebase
@@ -105,7 +136,6 @@ const toggleCheckInOut = (user, courseNumber, checkInText, setCheckInText) => {
       .remove();
 
     setCheckInText("Check in");
-    document.getElementsByClassName('MuiCardContent-root MuiCard-root').style.color = '#f50056'
   }
 };
 
@@ -153,7 +183,7 @@ const CourseCard = ({
             count={count}
           >
             <Button
-              variant='text'
+              variant="contained"
               color="secondary"
               onClick={() => {
                 toggleCheckInOut(user, courseNumber, checkInText, setCheckInText);
@@ -196,6 +226,9 @@ const CourseCard = ({
             </Grid>
           </ExpansionPanelDetails>
         </ExpansionPanel>
+        <Button onClick = {()=> {
+              addOfficeHourSession(officeHourSession, courseNumber)
+            }}>test</Button>
       </Card>
     );
   } else {
