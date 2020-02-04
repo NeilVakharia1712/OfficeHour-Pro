@@ -14,7 +14,8 @@ const CourseList = ({
   setCourse,
   checkedInCourse,
   mode,
-  setMode
+  setMode,
+  isProf
 }) => {
   const AddCourses = () => {
     setMode(true);
@@ -36,6 +37,7 @@ const CourseList = ({
                   isCheckedIn={course === checkedInCourse}
                   mode="CourseList"
                   setCourse={setCourse}
+                  isProf={isProf}
                 />
               );
             })}
@@ -51,6 +53,7 @@ const CourseList = ({
                   user={user}
                   isCheckedIn={course === checkedInCourse}
                   mode="CourseList"
+                  isProf={isProf}
                 />
               );
             })}

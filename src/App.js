@@ -38,7 +38,7 @@ const App = () => {
 			if (snapshot.val()) setSchedule(snapshot.val());
 		}
 		const courseDb = firebase.database().ref('courses');
-		courseDb.once("value", getCourseInfo, error => alert(error));
+		courseDb.on("value", getCourseInfo, error => alert(error));
 	}, [])
 
 	const verifyEmail = (email) => {
@@ -65,18 +65,31 @@ const App = () => {
 	}, [user])
 
 	return (
-		<Container disableGutters>
-			<ButtonAppBar user={user} />
-			<FormDialog />
-			<Slide direction="left" in={!mode} mountOnEnter unmountOnExit>
-				<div><CourseList user={user} schedule={schedule} courses={courses} setCourse={setCourse} checkedInCourse={checkedInCourse} mode={mode} setMode={setMode} /></div>
-			</Slide>
-			<Slide direction="right" in={mode} mountOnEnter unmountOnExit>
-				<div><AllCourseList schedule={schedule} user={user} courses={courses} /></div>
-			</Slide>
-			{user?<FloatingActionButtons mode={mode} setMode={setMode}/> : <></>}
-		</Container>
-	)
+    <Container disableGutters>
+      <ButtonAppBar user={user} />
+      <FormDialog />
+      <Slide direction="left" in={!mode} mountOnEnter unmountOnExit>
+        <div>
+          <CourseList
+            user={user}
+            schedule={schedule}
+            courses={courses}
+            setCourse={setCourse}
+            checkedInCourse={checkedInCourse}
+            mode={mode}
+            setMode={setMode}
+            isProf={isProf}
+          />
+        </div>
+      </Slide>
+      <Slide direction="right" in={mode} mountOnEnter unmountOnExit>
+        <div>
+          <AllCourseList schedule={schedule} user={user} courses={courses} />
+        </div>
+      </Slide>
+      {user ? <FloatingActionButtons mode={mode} setMode={setMode} /> : <></>}
+    </Container>
+  );
 };
 
 export default App;

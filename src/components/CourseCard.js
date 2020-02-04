@@ -104,8 +104,8 @@ const editOfficeHourSession = (sessionId,  officeHourSession, courseNumber) => {
     };
     var editSession = {};
     editSession["officeHours/" + sessionId] = data;
-    ref.update(editSession)
-  })
+    ref.update(editSession);
+  });
 }
 
 const deleteOHSession = (courseNumber, sessionId, setCourse) => {
@@ -159,7 +159,8 @@ const CourseCard = ({
   isCheckedIn,
   mode,
   isEnrolled = false,
-  setCourse
+  setCourse,
+  isProf
 }) => {
   const classes = useStyles();
   const [checkInText, setCheckInText] = useState(
@@ -168,6 +169,7 @@ const CourseCard = ({
   const [count, setCount] = useState(0);
   const [enroll, setEnroll] = useState(isEnrolled);
   console.log(officeHours)
+  console.log("IS PROF", isProf);
 
   useEffect(() => {
     const ref = firebase
@@ -181,7 +183,7 @@ const CourseCard = ({
 
   if (mode === "CourseList") {
     return (
-      <Card className={classes.card} style={{ marginTop: '10px' }}>
+      <Card className={classes.card} style={{ marginTop: "10px" }}>
         <CardContent>
           <Typography variant="h5" component="h2">
             {courseNumber}
@@ -199,18 +201,28 @@ const CourseCard = ({
               variant="contained"
               color="secondary"
               onClick={() => {
-                toggleCheckInOut(user, courseNumber, checkInText, setCheckInText);
+                toggleCheckInOut(
+                  user,
+                  courseNumber,
+                  checkInText,
+                  setCheckInText
+                );
               }}
               disabled={!areOHOngoing(courseNumber, officeHours).isOngoing}
-              style={{width:'100%'}}
+              style={{ width: "100%" }}
             >
               {checkInText}
             </Button>
           </OngoingOfficeHours>
         </CardContent>
         <ExpansionPanel>
-          <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content">
-            <Typography className={classes.expandSummary}>All Office Hours:</Typography>
+          <ExpansionPanelSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="panel1a-content"
+          >
+            <Typography className={classes.expandSummary}>
+              All Office Hours:
+            </Typography>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
             <Grid container spacing={2}>
@@ -218,33 +230,47 @@ const CourseCard = ({
                 session_id !== "CheckedInUsers" ? (
                   <Grid item container key={session_id}>
                     <Grid item xs={4}>
-                      <Typography variant='h6'>{formatFullDayOfWeekString(officeHours[session_id].weekDay)}</Typography>
+                      <Typography variant="h6">
+                        {formatFullDayOfWeekString(
+                          officeHours[session_id].weekDay
+                        )}
+                      </Typography>
                     </Grid>
                     <Grid item xs={8}>
-                      <Typography variant='h6' align='right'>
-                        {formatTime(officeHours[session_id].startTime)} - {formatTime(officeHours[session_id].endTime)}
+                      <Typography variant="h6" align="right">
+                        {formatTime(officeHours[session_id].startTime)} -{" "}
+                        {formatTime(officeHours[session_id].endTime)}
                       </Typography>
                     </Grid>
                     <Grid item xs={6}>
                       {officeHours[session_id].TAProf}
                     </Grid>
                     <Grid item xs={6}>
-                      <Typography variant='body1' align='right'>
+                      <Typography variant="body1" align="right">
                         {officeHours[session_id].location}
                       </Typography>
                     </Grid>
-                    <Grid item xs={6}></Grid>
-                    <Grid item xs={6}>
-                      <Typography variant='body1' align='right'>
+                    <Grid item xs={6}></Grid> {/* this space allows the Delete button to be aligned to the right of card */}
+                    {isProf ? (<Grid item xs={6}>
+                      <Typography variant="body1" align="right">
                         <Button
-                          variant='text'
-                          color='secondary'
-                          onClick={() => {deleteOHSession(courseNumber, session_id, setCourse)}}>Delete</Button>
+                          variant="text"
+                          color="secondary"
+                          onClick={() => {
+                            deleteOHSession(
+                              courseNumber,
+                              session_id,
+                              setCourse
+                            );
+                          }}
+                        >
+                          Delete
+                        </Button>
                       </Typography>
-                    </Grid>
+                    </Grid>) : null}
                   </Grid>
-                ) : null)
-              }
+                ) : null
+              )}
             </Grid>
           </ExpansionPanelDetails>
         </ExpansionPanel>
