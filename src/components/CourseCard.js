@@ -57,13 +57,12 @@ const unchecked = (
   user,
   courseNumber,
   setEnroll,
-  checkInText,
-  setCheckInText
+  isCheckedIn
 ) => {
   const ref = firebase.database().ref("Users/" + user.uid);
-  if (checkInText === "Check in") {
+  if (!isCheckedIn) {
     console.log("remove checked in courses");
-    toggleCheckInOut(user, courseNumber, "Check out", setCheckInText);
+    toggleCheckInOut(user, courseNumber, true);
   }
   ref.once("value", snapshot => {
     let courseList = snapshot.val()["courses"];
@@ -91,8 +90,8 @@ const deleteOHSession = (courseNumber, sessionId, setCourse) => {
     });
 };
 
-const toggleCheckInOut = (user, courseNumber, checkInText, setCheckInText) => {
-  if (checkInText === "Check in") {
+const toggleCheckInOut = (user, courseNumber, isCheckedIn) => {
+  if (!isCheckedIn) {
     firebase
       .database()
       .ref("courses/" + courseNumber + "/officeHours/CheckedInUsers")
@@ -106,8 +105,7 @@ const toggleCheckInOut = (user, courseNumber, checkInText, setCheckInText) => {
       .update({
         checkedInCourse: courseNumber
       });
-    setCheckInText("Check out");
-  } else if (checkInText === "Check out") {
+  } else {
     firebase
       .database()
       .ref("courses/" + courseNumber + "/officeHours/CheckedInUsers")
@@ -119,8 +117,6 @@ const toggleCheckInOut = (user, courseNumber, checkInText, setCheckInText) => {
       .ref("Users/" + user.uid)
       .child("checkedInCourse")
       .remove();
-
-    setCheckInText("Check in");
   }
 };
 
@@ -136,9 +132,6 @@ const CourseCard = ({
   isProf
 }) => {
   const classes = useStyles();
-  const [checkInText, setCheckInText] = useState(
-    isCheckedIn ? "Check out" : "Check in"
-  );
   const [count, setCount] = useState(0);
   const [enroll, setEnroll] = useState(isEnrolled);
 
@@ -176,14 +169,13 @@ const CourseCard = ({
                 toggleCheckInOut(
                   user,
                   courseNumber,
-                  checkInText,
-                  setCheckInText
+                  isCheckedIn
                 );
               }}
               disabled={!areOHOngoing(courseNumber, officeHours).isOngoing}
               style={{ width: "100%" }}
             >
-              {checkInText}
+              {isCheckedIn? "Check out" : "Check in"}
             </Button>
             </OngoingOfficeHours>
           }
@@ -283,8 +275,7 @@ const CourseCard = ({
                         user,
                         courseNumber,
                         setEnroll,
-                        checkInText,
-                        setCheckInText
+                        isCheckedIn
                       )
                     : checked(user, courseNumber, setEnroll);
                 }}

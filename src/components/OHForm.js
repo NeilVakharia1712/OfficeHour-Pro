@@ -81,7 +81,7 @@ const OHForm = ({ courseNumber, sessionId, officeHours }) => {
 		<MuiPickersUtilsProvider utils={DateFnsUtils}>
 			<Button size='small' color="primary" onClick={handleClickOpen}>
 				{isEdit? 'Edit' : 'Add office hours session'}
-      </Button>
+      		</Button>
 			<Dialog
 				open={open}
 				onClose={handleClose}
