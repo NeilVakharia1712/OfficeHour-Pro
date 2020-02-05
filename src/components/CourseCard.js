@@ -19,6 +19,7 @@ import {
   formatFullDayOfWeekString,
   formatTime
 } from "./OngoingOfficeHours.js";
+import FeedBackSelector from './FeedbackSelector'
 import "../App.css";
 import OHForm from "./OHForm";
 import '../App.css';
@@ -60,10 +61,6 @@ const unchecked = (
   isCheckedIn
 ) => {
   const ref = firebase.database().ref("Users/" + user.uid);
-  if (!isCheckedIn) {
-    console.log("remove checked in courses");
-    toggleCheckInOut(user, courseNumber, true);
-  }
   ref.once("value", snapshot => {
     let courseList = snapshot.val()["courses"];
     let pos = courseList.indexOf(courseNumber);
@@ -90,39 +87,6 @@ const deleteOHSession = (courseNumber, sessionId, setCourse) => {
     });
 };
 
-const toggleCheckInOut = (user, courseNumber, isCheckedIn) => {
-  if (!isCheckedIn) {
-    firebase
-      .database()
-      .ref("courses/" + courseNumber + "/officeHours/CheckedInUsers")
-      .update({
-        [user.uid]: user.uid
-      });
-
-    firebase
-      .database()
-      .ref("Users/" + user.uid)
-      .update({
-        checkedInCourse: courseNumber
-      });
-
-  } else {
-    firebase
-      .database()
-      .ref("courses/" + courseNumber + "/officeHours/CheckedInUsers")
-      .child(user.uid)
-      .remove();
-
-    firebase
-      .database()
-      .ref("Users/" + user.uid)
-      .child("checkedInCourse")
-      .remove();
-
-    isCheckedIn = false;
-  }
-};
-
 const CourseCard = ({
   user,
   courseName,
@@ -137,6 +101,7 @@ const CourseCard = ({
   const classes = useStyles();
   const [count, setCount] = useState(0);
   const [enroll, setEnroll] = useState(isEnrolled);
+  const [feedbackSeletorOpen, setFeedbackSelectorOpen] = useState(false)
 
   useEffect(() => {
     const nums = [] 
@@ -174,6 +139,7 @@ const CourseCard = ({
     return (
       <Card className={classes.card} style={{ marginTop: "10px" }}>
         <CardContent>
+          <FeedBackSelector feedbackOpen={feedbackSeletorOpen} setFeedbackOpen={setFeedbackSelectorOpen} user={user} courseNumber={courseNumber} />
           <Typography variant="h5" component="h2">
             {courseNumber}
           </Typography>
@@ -187,25 +153,23 @@ const CourseCard = ({
               officeHours={officeHours}
               count={count}
             >
-              {isCheckedIn ?
-              <Typography variant="subtitle2" align="center" color="secondary" style={{ marginBottom: "7px" }}>
-                Successfully checked in!
-              </Typography> : null}
+              {
+                isCheckedIn?
+                <Typography variant="subtitle2" align="center" color="secondary" style={{ marginBottom: "7px" }}>
+                  Successfully checked in!
+                </Typography> : null
+              }
               <Button
-                variant={isCheckedIn ? "outlined" : "contained"}
+                variant="contained"
                 color="primary"
                 onClick={() => {
-                  toggleCheckInOut(
-                    user,
-                    courseNumber,
-                    isCheckedIn
-                  );
+                  setFeedbackSelectorOpen(true)
                 }}
                 disabled={isCheckedIn}
                 style={{ width: "100%" }}
               >
-                check in
-            </Button>
+                  check in
+              </Button>
             </OngoingOfficeHours>
           }
         </CardContent>

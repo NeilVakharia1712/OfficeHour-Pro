@@ -28,16 +28,6 @@ const OHForm = ({ courseNumber, sessionId, officeHours }) => {
 		setOpen(false);
 	};
 
-  const handleChangeStartTime = (value) => {
-    console.log(value);
-    const hours = value.getUTCHours() - 6;
-    const mins = value.getUTCMinutes();
-    const timeText = hours + ':' + mins;
-
-    setStart(hours + ':' + mins);
-    console.log(value.toTimeString().split(' ')[0]);
-  }
-
 	const handleChangeWeekday = event => {
 		setWeekday(event.target.value);
 	};

@@ -34,7 +34,7 @@ const CourseList = ({
                   courseName={schedule[course]["title"]}
                   officeHours={schedule[course]["officeHours"]}
                   user={user}
-                  isCheckedIn={course === checkedInCourse}
+                  isCheckedIn={checkedInCourse && checkedInCourse.hasOwnProperty(course)}
                   mode="CourseList"
                   setCourse={setCourse}
                   isProf={isProf}
@@ -51,7 +51,7 @@ const CourseList = ({
                   courseName={schedule[course]["title"]}
                   officeHours={schedule[course]["officeHours"]}
                   user={user}
-                  isCheckedIn={course === checkedInCourse}
+                  isCheckedIn={checkedInCourse && checkedInCourse.hasOwnProperty(course)}
                   mode="CourseList"
                   isProf={isProf}
                 />
