@@ -170,12 +170,12 @@ const findNextOHSession = officeHours => {
 };
 
 const getStatus = (count) => {
-  const description = ['Empty', 'Little Crowded', 'Moderate Crowded', 'Very Crowded'];
-  return description[Math.floor(count)]
+  const description = ['Empty', 'Little Crowded', 'Moderately Crowded', 'Very Crowded'];
+  console.log(Math.ceil(count) - 1)
+  return description[Math.ceil(count) - 1]
 }
 const OngoingOfficeHours = props => {
   const ongoingSession = areOHOngoing(props.courseNumber, props.officeHours);
-
   return (
     <div>
       {ongoingSession.isOngoing ? (
@@ -210,13 +210,13 @@ const OngoingOfficeHours = props => {
                 >
                   Current Status
                 </Typography>
-                  <Typography
-                    variant="h6"
-                    align="right"
-                    style={{ width: "100%" }}
-                  >
-                    {getStatus(props.count)}
-                  </Typography>
+                <Typography
+                  variant="h6"
+                  align="right"
+                  style={{ width: "100%" }}
+                >
+                  {getStatus(props.count)}
+                </Typography>
               </Grid>
             </Grid>
           </CardContent>

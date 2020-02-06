@@ -13,14 +13,15 @@ import "firebase/database";
 import firebase from "firebase/app";
 
 const crowdedness = [0, 1, 2, 3];
-const description = ['Empty', 'Little Crowded', 'Moderate Crowded', 'Very Crowded'];
+const description = ['Empty', 'Little Crowded', 'Moderately Crowded', 'Very Crowded'];
 const level = [<SentimentSatisfiedAltIcon />, <SentimentSatisfiedIcon />, <SentimentDissatisfiedIcon />, <SentimentVeryDissatisfiedIcon />]
 
-const FeedBackSelector = ({ feedbackOpen, setFeedbackOpen, user, courseNumber }) => {
+const FeedBackSelector = ({ feedbackOpen, setFeedbackOpen, user, courseNumber, setMessageOpen }) => {
 
     const handleListItemClick = crowd => {
         CheckIn(user, courseNumber, crowd)
         setFeedbackOpen(false)
+        setMessageOpen(true)
     };
 
     const CheckIn = (user, courseNumber, level) => {
@@ -44,7 +45,7 @@ const FeedBackSelector = ({ feedbackOpen, setFeedbackOpen, user, courseNumber })
 
     return (
         <Dialog aria-labelledby="simple-dialog-title" open={feedbackOpen}>
-            <DialogTitle id="simple-dialog-title">Set backup account</DialogTitle>
+            <DialogTitle id="simple-dialog-title">How crowded is this office hour?</DialogTitle>
             <List>
                 {crowdedness.map(crowd => (
                     <ListItem button onClick={() => {handleListItemClick(crowd)}} key={crowd}>

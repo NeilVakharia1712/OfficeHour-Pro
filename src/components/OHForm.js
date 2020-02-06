@@ -10,14 +10,14 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import DateFnsUtils from '@date-io/date-fns';
 
 const OHForm = ({ courseNumber, sessionId, officeHours }) => {
-	let isEdit = !(typeof(officeHours) == "undefined")
+	let isEdit = !(typeof (officeHours) == "undefined")
 	const [open, setOpen] = React.useState(false);
 	const [weekday, setWeekday] = React.useState(isEdit ? officeHours.weekDay : '');
-	const [instructor, setInstructor] = React.useState(isEdit ? officeHours.TAProf: '')
-  const [instructorName, setInstructorName] = React.useState(isEdit ? officeHours.instructorName : '')
-	const [email, setEmail] = React.useState('')
-	const [start, setStart] = React.useState(isEdit? new Date("2018-01-01T" + officeHours.startTime + ":00"):new Date("2018-01-01T00:00:00"))
-	const [end, setEnd] = React.useState(isEdit? new Date("2018-01-01T" + officeHours.endTime + ":00"):new Date("2018-01-01T00:00:00"))
+	const [instructor, setInstructor] = React.useState(isEdit ? officeHours.TAProf : '')
+	const [instructorName, setInstructorName] = React.useState(isEdit ? officeHours.instructorName : '')
+	const [email, setEmail] = React.useState(isEdit ? officeHours.email : '')
+	const [start, setStart] = React.useState(isEdit ? new Date("2018-01-01T" + officeHours.startTime + ":00") : new Date("2018-01-01T00:00:00"))
+	const [end, setEnd] = React.useState(isEdit ? new Date("2018-01-01T" + officeHours.endTime + ":00") : new Date("2018-01-01T00:00:00"))
 	const [location, setLocation] = React.useState(isEdit ? officeHours.location : '')
 
 	const handleClickOpen = () => {
@@ -42,61 +42,61 @@ const OHForm = ({ courseNumber, sessionId, officeHours }) => {
 
 	const handleChangeLocation = event => {
 		setLocation(event.target.value)
-  }
+	}
 
-  const handleChangeInstructorName = event => {
-    setInstructorName(event.target.value)
-  }
+	const handleChangeInstructorName = event => {
+		setInstructorName(event.target.value)
+	}
 
-  const addOfficeHourSession = (courseNumber) => {
-    const ref = firebase.database().ref("courses/" + courseNumber);
-    const uuidv4 = require('uuid/v4');
-    const sessionId = uuidv4();
-    const startTime = start.toTimeString().split(' ')[0].slice(0, 5);
-    const endTime = end.toTimeString().split(' ')[0].slice(0, 5);
-    ref.once("value", snapshot => {
-      var data = {
-        TAProf: instructor,
-        endTime: endTime,
-        location: location,
-        startTime: startTime,
-        instructorName: instructorName,
-        email: email,
-        weekDay: weekday
-      };
-      var newSession = {};
-      newSession['officeHours/' + sessionId] = data;
-      ref.update(newSession)
-      handleClose();
-    })
-  }
+	const addOfficeHourSession = (courseNumber) => {
+		const ref = firebase.database().ref("courses/" + courseNumber);
+		const uuidv4 = require('uuid/v4');
+		const sessionId = uuidv4();
+		const startTime = start.toTimeString().split(' ')[0].slice(0, 5);
+		const endTime = end.toTimeString().split(' ')[0].slice(0, 5);
+		ref.once("value", snapshot => {
+			var data = {
+				TAProf: instructor,
+				endTime: endTime,
+				location: location,
+				startTime: startTime,
+				instructorName: instructorName,
+				email: email,
+				weekDay: weekday
+			};
+			var newSession = {};
+			newSession['officeHours/' + sessionId] = data;
+			ref.update(newSession)
+			handleClose();
+		})
+	}
 
-  const editOfficeHourSession = (sessionId, courseNumber) => {
-    const ref = firebase.database().ref("courses/" + courseNumber);
-    const startTime = start.toTimeString().split(' ')[0].slice(0, 5);
-    const endTime = end.toTimeString().split(' ')[0].slice(0, 5);
-    ref.once("value", snapshot => {
-      var data = {
-        TAProf: instructor,
-        endTime: endTime,
-        location: location,
-        startTime: startTime,
-        instructorName: instructorName,
-        email: email,
-        weekDay: weekday
-      };
-      var editSession = {};
-      editSession["officeHours/" + sessionId] = data;
-      ref.update(editSession);
-      handleClose();
-    });
-  }
+	const editOfficeHourSession = (sessionId, courseNumber) => {
+		const ref = firebase.database().ref("courses/" + courseNumber);
+		const startTime = start.toTimeString().split(' ')[0].slice(0, 5);
+		const endTime = end.toTimeString().split(' ')[0].slice(0, 5);
+		ref.once("value", snapshot => {
+			var data = {
+				TAProf: instructor,
+				endTime: endTime,
+				location: location,
+				startTime: startTime,
+				instructorName: instructorName,
+				email: email,
+				weekDay: weekday
+			};
+			var editSession = {};
+			editSession["officeHours/" + sessionId] = data;
+			ref.update(editSession);
+			handleClose();
+		});
+	}
 
 	return (
 		<MuiPickersUtilsProvider utils={DateFnsUtils}>
 			<Button size='small' color="primary" onClick={handleClickOpen}>
-				{isEdit? 'Edit' : 'Add office hours session'}
-      		</Button>
+				{isEdit ? 'Edit' : 'Add office hours session'}
+			</Button>
 			<Dialog
 				open={open}
 				onClose={handleClose}
@@ -106,11 +106,22 @@ const OHForm = ({ courseNumber, sessionId, officeHours }) => {
 				<DialogContent>
 					<List>
 						<ListItem>
-							<TextField label="Instructor" value={instructor} onChange={handleChangeInstructor} />
+							<FormControl style={{ width: '100%' }}>
+								<InputLabel id="weekday-label">Instructor</InputLabel>
+								<Select
+									labelId="weekday-label"
+									id="weekday"
+									value={instructor}
+									onChange={handleChangeInstructor}
+								>
+									<MenuItem value={'TA'}>TA</MenuItem>
+									<MenuItem value={'Prof'}>Professor</MenuItem>
+								</Select>
+							</FormControl>
 						</ListItem>
-            <ListItem>
-              <TextField label="Instructor Name" value={instructorName} onChange={handleChangeInstructorName} />
-            </ListItem>
+						<ListItem>
+							<TextField label="Instructor Name" value={instructorName} onChange={handleChangeInstructorName} />
+						</ListItem>
 						<ListItem>
 							<TextField label="Instructor Email" value={email} onChange={handleChangeEmail} />
 						</ListItem>
@@ -155,24 +166,24 @@ const OHForm = ({ courseNumber, sessionId, officeHours }) => {
 					</List>
 				</DialogContent>
 				<DialogActions>
-					<Button onClick={()=>{setOpen(false)}}>Cancel</Button>
-          {
-            isEdit? (
-              <Button
-                variant="contained"
-                color="secondary"
-                onClick={()=>{editOfficeHourSession(sessionId, courseNumber)}}>
-                Submit
+					<Button onClick={() => { setOpen(false) }}>Cancel</Button>
+					{
+						isEdit ? (
+							<Button
+								variant="contained"
+								color="secondary"
+								onClick={() => { editOfficeHourSession(sessionId, courseNumber) }}>
+								Submit
               </Button>
-            ) : (
-              <Button
-                variant="contained"
-                color="secondary"
-                onClick={()=>{addOfficeHourSession(courseNumber)}}>
-                Submit
+						) : (
+								<Button
+									variant="contained"
+									color="secondary"
+									onClick={() => { addOfficeHourSession(courseNumber) }}>
+									Submit
               </Button>
-            )
-          }
+							)
+					}
 				</DialogActions>
 			</Dialog>
 		</MuiPickersUtilsProvider>

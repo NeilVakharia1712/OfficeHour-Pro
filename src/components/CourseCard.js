@@ -9,8 +9,10 @@ import {
   Checkbox,
   ExpansionPanel,
   ExpansionPanelDetails,
-  ExpansionPanelSummary
+  ExpansionPanelSummary,
+  Snackbar
 } from "@material-ui/core";
+import MuiAlert from '@material-ui/lab/Alert';
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import "firebase/database";
 import firebase from "firebase/app";
@@ -35,6 +37,10 @@ const useStyles = makeStyles({
     color: "grey"
   }
 });
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 const checked = (user, courseNumber, setEnroll) => {
   const ref = firebase.database().ref("Users/" + user.uid);
@@ -101,44 +107,40 @@ const CourseCard = ({
   const [count, setCount] = useState(0);
   const [enroll, setEnroll] = useState(isEnrolled);
   const [feedbackSeletorOpen, setFeedbackSelectorOpen] = useState(false)
+  const [messageOpen, setMessageOpen] = useState(false)
 
   useEffect(() => {
-    const nums = [] 
+    const nums = []
     const dbRef = firebase.database().ref("courses/" + courseNumber + "/officeHours/CheckedInUsers");
     dbRef.orderByChild("time").limitToLast(3).on("child_added", snapshot => {
       nums.push(snapshot.val().level)
-     });
-
-     if(nums.length === 0){
-      console.log('0')
-      const count = 0; 
+    });
+    console.log(nums)
+    if (nums.length === 0) {
+      const count = 1;
       setCount(count)
-     }
-     else if(nums.length === 1){
-       console.log(nums[0] * 1)
-       const count = nums[0]*1
-       setCount(count)
-
-     }
-     else if(nums.length === 2){
-        console.log(nums[1]* 0.7 + nums[0]*0.3)
-        const count = nums[1]* 0.7 + nums[0]*0.3
-        setCount(count)
-     }
-
-     else if(nums.length === 3){
-      console.log(nums[2], nums[1], nums[0]) 
-      console.log(nums[2]*0.6 + nums[1]*0.3 + nums[0]*0.1)
-      const count = nums[2]*0.6 + nums[1]*0.3 + nums[0]*0.1
+    }
+    else if (nums.length === 1) {
+      const count = nums[0] * 1
       setCount(count)
-     }
+    }
+    else if (nums.length === 2) {
+      const count = nums[1] * 0.7 + nums[0] * 0.3
+      setCount(count)
+    }
+
+    else if (nums.length === 3) {
+      const count = nums[2] * 0.6 + nums[1] * 0.3 + nums[0] * 0.1
+      setCount(count)
+    }
+    console.log(count)
   });
 
   if (mode === "CourseList") {
     return (
       <Card className={classes.card} style={{ marginTop: "10px" }}>
         <CardContent>
-          <FeedBackSelector feedbackOpen={feedbackSeletorOpen} setFeedbackOpen={setFeedbackSelectorOpen} user={user} courseNumber={courseNumber} />
+          <FeedBackSelector feedbackOpen={feedbackSeletorOpen} setFeedbackOpen={setFeedbackSelectorOpen} user={user} courseNumber={courseNumber} setMessageOpen={setMessageOpen}/>
           <Typography variant="h5" component="h2">
             {courseNumber}
           </Typography>
@@ -152,12 +154,6 @@ const CourseCard = ({
               officeHours={officeHours}
               count={count}
             >
-              {
-                isCheckedIn?
-                <Typography variant="subtitle2" align="center" color="secondary" style={{ marginBottom: "7px" }}>
-                  Successfully checked in!
-                </Typography> : null
-              }
               <Button
                 variant="contained"
                 color="primary"
@@ -167,8 +163,13 @@ const CourseCard = ({
                 disabled={isCheckedIn}
                 style={{ width: "100%" }}
               >
-                  check in
+                {isCheckedIn?'Already checked in':'check in'}
               </Button>
+              <Snackbar open={messageOpen} autoHideDuration={6000} onClose={()=>{setMessageOpen(false)}}>
+                <Alert onClose={()=>{setMessageOpen(false)}} severity="success">
+                  Successfully checked in!
+                </Alert>
+              </Snackbar>
             </OngoingOfficeHours>
           }
         </CardContent>
@@ -221,7 +222,7 @@ const CourseCard = ({
                                     sessionId={sessionId}
                                     officeHours={officeHours[sessionId]}
                                   />
-                                  <Button variant="text" color="secondary" onClick={() => {deleteOHSession(courseNumber, sessionId, setCourse);}}>
+                                  <Button variant="text" color="secondary" onClick={() => { deleteOHSession(courseNumber, sessionId, setCourse); }}>
                                     Delete
                                   </Button>
                                 </Typography>
