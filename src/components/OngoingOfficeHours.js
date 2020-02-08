@@ -1,6 +1,6 @@
 import React from "react";
 import Typography from "@material-ui/core/Typography";
-import { Grid, Divider, Card, CardContent } from "@material-ui/core"
+import { Grid, Divider, Card, CardContent } from "@material-ui/core";
 
 const getCurrentTime = () => {
   const now = new Date();
@@ -33,6 +33,7 @@ const convertDayOfWeekStrToNum = day => {
 
 export const areOHOngoing = (courseNumber, officeHours) => {
   const [day, hour, minute] = getCurrentTime();
+  if (officeHours === undefined || officeHours.length === 0) return false;
   const sessions = Object.values(officeHours).filter(
     session => convertDayOfWeekStrToNum(session.weekDay) === day
   );
@@ -110,6 +111,7 @@ const findNextOHSession = officeHours => {
   var [nowDay, nowHour] = getCurrentTime();
   var nextSessionThisWeek = undefined;
   var firstSessionNextWeek = undefined;
+  if (officeHours === undefined || officeHours.length === 0) return null;
   for (var session of Object.values(officeHours)) {
     if (typeof session !== "object" || !("weekDay" in session)) {
       continue;
@@ -189,7 +191,7 @@ const OngoingOfficeHours = props => {
   return (
     <div>
       {ongoingSession.isOngoing ? (
-        <Card variant='outlined'>
+        <Card variant="outlined">
           <CardContent>
             <Grid container item>
               <Grid item xs={8}>
@@ -198,28 +200,37 @@ const OngoingOfficeHours = props => {
                 </Typography>
               </Grid>
               <Grid item container xs={4}>
-                <Typography variant='caption' align='right' style={{width:'100%'}}>
+                <Typography
+                  variant="caption"
+                  align="right"
+                  style={{ width: "100%" }}
+                >
                   Current Student
                 </Typography>
               </Grid>
               <Grid item xs={8}>
-                <Typography variant='h6'>
-                  {formatTime(ongoingSession.info.startTime)} - {formatTime(ongoingSession.info.endTime)}
+                <Typography variant="h6">
+                  {formatTime(ongoingSession.info.startTime)} -{" "}
+                  {formatTime(ongoingSession.info.endTime)}
                 </Typography>
               </Grid>
               <Grid item xs={4}>
-                <Typography variant='h6' align='right' style={{width:'100%'}}>
+                <Typography
+                  variant="h6"
+                  align="right"
+                  style={{ width: "100%" }}
+                >
                   {props.count}/{ongoingSession.info.desiredCapacity}
                 </Typography>
               </Grid>
               <Grid item xs={12}>
-                <Typography variant='body1'>
+                <Typography variant="body1">
                   {ongoingSession.info.location}
                 </Typography>
               </Grid>
               <Grid item xs={12}>
-                <Typography variant='body1' style={{width:'100%'}}>
-                  {ongoingSession.info.TAProf}
+                <Typography variant="body1" style={{ width: "100%" }}>
+                  {ongoingSession.info.instructorName}
                 </Typography>
               </Grid>
             </Grid>
@@ -230,8 +241,8 @@ const OngoingOfficeHours = props => {
           </Grid>
         </Card>
       ) : (
-          findNextOHSession(props.officeHours)
-        )}
+        findNextOHSession(props.officeHours)
+      )}
     </div>
   );
 };

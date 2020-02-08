@@ -9,9 +9,9 @@ import {
   Checkbox,
   ExpansionPanel,
   ExpansionPanelDetails,
-  ExpansionPanelSummary,
+  ExpansionPanelSummary
 } from "@material-ui/core";
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import "firebase/database";
 import firebase from "firebase/app";
 import OngoingOfficeHours from "./OngoingOfficeHours";
@@ -21,6 +21,8 @@ import {
   formatTime
 } from "./OngoingOfficeHours.js";
 import "../App.css";
+import AddOHForm from "./AddOHForm";
+import EditOHForm from "./EditOHForm";
 
 const useStyles = makeStyles({
   card: {
@@ -31,7 +33,7 @@ const useStyles = makeStyles({
   },
   expandSummary: {
     fontSize: 14,
-    color: 'grey'
+    color: "grey"
   }
 });
 
@@ -52,12 +54,18 @@ const checked = (user, courseNumber, setEnroll) => {
   setEnroll(true);
 };
 
-const unchecked = (user, courseNumber, setEnroll, checkInText, setCheckInText) => {
+const unchecked = (
+  user,
+  courseNumber,
+  setEnroll,
+  checkInText,
+  setCheckInText
+) => {
   const ref = firebase.database().ref("Users/" + user.uid);
-  console.log(checkInText)
+  console.log(checkInText);
   if (checkInText === "Check in") {
-    console.log('remove checked in courses')
-    toggleCheckInOut(user, courseNumber, "Check out", setCheckInText)
+    console.log("remove checked in courses");
+    toggleCheckInOut(user, courseNumber, "Check out", setCheckInText);
   }
   ref.once("value", snapshot => {
     let courseList = snapshot.val()["courses"];
@@ -74,49 +82,16 @@ const unchecked = (user, courseNumber, setEnroll, checkInText, setCheckInText) =
   setEnroll(false);
 };
 
-const addOfficeHourSession = (officeHourSession, courseNumber) => {
-  const ref = firebase.database().ref("courses/" + courseNumber);
-  const uuidv4 = require('uuid/v4');
-  const sessionId = uuidv4();
-  ref.once("value", snapshot => {
-    var data = {
-      TAProf: officeHourSession.TAProf,
-      endTime: officeHourSession.endTime,
-      location: officeHourSession.location,
-      startTime: officeHourSession.startTime,
-      weekDay: officeHourSession.weekDay
-    };
-    var newSession = {};
-    newSession['officeHours/'+ sessionId] = data;
-    ref.update(newSession)
-  })
-}
-
-const editOfficeHourSession = (sessionId,  officeHourSession, courseNumber) => {
-  const ref = firebase.database().ref("courses/" + courseNumber);
-  ref.once("value", snapshot => {
-    var data = {
-      TAProf: officeHourSession.TAProf,
-      endTime: officeHourSession.endTime,
-      location: officeHourSession.location,
-      startTime: officeHourSession.startTime,
-      weekDay: officeHourSession.weekDay
-    };
-    var editSession = {};
-    editSession["officeHours/" + sessionId] = data;
-    ref.update(editSession);
-  });
-}
-
 const deleteOHSession = (courseNumber, sessionId, setCourse) => {
   firebase
     .database()
     .ref("courses/" + courseNumber + "/officeHours")
     .child(sessionId)
-    .remove().then(() => {
+    .remove()
+    .then(() => {
       console.log("refresh");
     });
-}
+};
 
 const toggleCheckInOut = (user, courseNumber, checkInText, setCheckInText) => {
   if (checkInText === "Check in") {
@@ -168,8 +143,6 @@ const CourseCard = ({
   );
   const [count, setCount] = useState(0);
   const [enroll, setEnroll] = useState(isEnrolled);
-  console.log(officeHours)
-  console.log("IS PROF", isProf);
 
   useEffect(() => {
     const ref = firebase
@@ -215,70 +188,91 @@ const CourseCard = ({
             </Button>
           </OngoingOfficeHours>
         </CardContent>
-        <ExpansionPanel>
-          <ExpansionPanelSummary
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel1a-content"
-          >
-            <Typography className={classes.expandSummary}>
-              All Office Hours:
-            </Typography>
-          </ExpansionPanelSummary>
-          <ExpansionPanelDetails>
-            <Grid container spacing={2}>
-              {Object.keys(officeHours).map(session_id =>
-                session_id !== "CheckedInUsers" ? (
-                  <Grid item container key={session_id}>
-                    <Grid item xs={4}>
-                      <Typography variant="h6">
-                        {formatFullDayOfWeekString(
-                          officeHours[session_id].weekDay
-                        )}
-                      </Typography>
+        {officeHours !== undefined ? (
+          <ExpansionPanel>
+            <ExpansionPanelSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1a-content"
+            >
+              <Typography className={classes.expandSummary}>
+                All Office Hours:
+              </Typography>
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails>
+              <Grid container spacing={2}>
+                {Object.keys(officeHours).map(session_id =>
+                  session_id !== "CheckedInUsers" ? (
+                    <Grid item container key={session_id}>
+                      <Grid item xs={4}>
+                        <Typography variant="h6">
+                          {formatFullDayOfWeekString(
+                            officeHours[session_id].weekDay
+                          )}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={8}>
+                        <Typography variant="h6" align="right">
+                          {formatTime(officeHours[session_id].startTime)} -{" "}
+                          {formatTime(officeHours[session_id].endTime)}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={6}>
+                        {`${officeHours[session_id].instructorName} (${officeHours[session_id].TAProf})`}
+                      </Grid>
+                      <Grid item xs={6}>
+                        <Typography variant="body1" align="right">
+                          {officeHours[session_id].location}
+                        </Typography>
+                      </Grid>
+                      {isProf ? (
+                        <Grid item xs={6}>
+                          <EditOHForm
+                            courseNumber={courseNumber}
+                            sessionId={session_id}
+                            officeHours={officeHours}
+                          />
+                        </Grid>
+                      ) : null}
+                      {isProf ? (
+                        <Grid item xs={6}>
+                          <Typography variant="body1" align="right">
+                            <Button
+                              variant="text"
+                              color="secondary"
+                              onClick={() => {
+                                deleteOHSession(
+                                  courseNumber,
+                                  session_id,
+                                  setCourse
+                                );
+                              }}
+                            >
+                              Delete
+                            </Button>
+                          </Typography>
+                        </Grid>
+                      ) : null}
                     </Grid>
-                    <Grid item xs={8}>
-                      <Typography variant="h6" align="right">
-                        {formatTime(officeHours[session_id].startTime)} -{" "}
-                        {formatTime(officeHours[session_id].endTime)}
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={6}>
-                      {officeHours[session_id].TAProf}
-                    </Grid>
-                    <Grid item xs={6}>
-                      <Typography variant="body1" align="right">
-                        {officeHours[session_id].location}
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={6}></Grid> {/* this space allows the Delete button to be aligned to the right of card */}
-                    {isProf ? (<Grid item xs={6}>
-                      <Typography variant="body1" align="right">
-                        <Button
-                          variant="text"
-                          color="secondary"
-                          onClick={() => {
-                            deleteOHSession(
-                              courseNumber,
-                              session_id,
-                              setCourse
-                            );
-                          }}
-                        >
-                          Delete
-                        </Button>
-                      </Typography>
-                    </Grid>) : null}
+                  ) : null
+                )}
+                {isProf ? (
+                  <Grid container justify="center">
+                    <AddOHForm courseNumber={courseNumber} />
                   </Grid>
-                ) : null
-              )}
-            </Grid>
-          </ExpansionPanelDetails>
-        </ExpansionPanel>
+                ) : null}
+              </Grid>
+            </ExpansionPanelDetails>
+          </ExpansionPanel>
+        ) : isProf ? (
+          <Grid container justify="center" style={{ marginBottom: "20px" }}>
+            <AddOHForm courseNumber={courseNumber} />
+          </Grid>
+        ) : null}
       </Card>
     );
   } else {
     return (
-      <Card className={classes.card} >
+      <Card className={classes.card}>
         <CardContent>
           <Grid container>
             <Grid item xs={11}>
@@ -292,7 +286,13 @@ const CourseCard = ({
                 checked={enroll}
                 onChange={() => {
                   enroll
-                    ? unchecked(user, courseNumber, setEnroll, checkInText, setCheckInText)
+                    ? unchecked(
+                        user,
+                        courseNumber,
+                        setEnroll,
+                        checkInText,
+                        setCheckInText
+                      )
                     : checked(user, courseNumber, setEnroll);
                 }}
               />
