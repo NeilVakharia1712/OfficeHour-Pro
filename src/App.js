@@ -82,7 +82,7 @@ const App = () => {
       </Slide>
       <Slide direction="right" in={mode} mountOnEnter unmountOnExit>
         <div>
-          <AllCourseList schedule={schedule} user={user} courses={courses} />
+          <AllCourseList schedule={schedule} user={user} courses={courses} isProf={isProf} />
         </div>
       </Slide>
       {user ? <FloatingActionButtons mode={mode} setMode={setMode} /> : <></>}
