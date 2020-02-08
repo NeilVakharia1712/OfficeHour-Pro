@@ -171,7 +171,7 @@ const CourseCard = ({
             >
             <Button
               variant="contained"
-              color="secondary"
+              color="primary"
               onClick={() => {
                 toggleCheckInOut(
                   user,
