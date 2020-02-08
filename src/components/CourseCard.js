@@ -21,6 +21,7 @@ import {
   formatTime
 } from "./OngoingOfficeHours.js";
 import "../App.css";
+import FormDialog from "./EditOfficeHours";
 
 const useStyles = makeStyles({
   card: {
@@ -54,7 +55,6 @@ const checked = (user, courseNumber, setEnroll) => {
 
 const unchecked = (user, courseNumber, setEnroll, checkInText, setCheckInText) => {
   const ref = firebase.database().ref("Users/" + user.uid);
-  console.log(checkInText)
   if (checkInText === "Check in") {
     console.log('remove checked in courses')
     toggleCheckInOut(user, courseNumber, "Check out", setCheckInText)
@@ -87,12 +87,12 @@ const addOfficeHourSession = (officeHourSession, courseNumber) => {
       weekDay: officeHourSession.weekDay
     };
     var newSession = {};
-    newSession['officeHours/'+ sessionId] = data;
+    newSession['officeHours/' + sessionId] = data;
     ref.update(newSession)
   })
 }
 
-const editOfficeHourSession = (sessionId,  officeHourSession, courseNumber) => {
+const editOfficeHourSession = (sessionId, officeHourSession, courseNumber) => {
   const ref = firebase.database().ref("courses/" + courseNumber);
   ref.once("value", snapshot => {
     var data = {
@@ -168,8 +168,6 @@ const CourseCard = ({
   );
   const [count, setCount] = useState(0);
   const [enroll, setEnroll] = useState(isEnrolled);
-  console.log(officeHours)
-  console.log("IS PROF", isProf);
 
   useEffect(() => {
     const ref = firebase
@@ -191,29 +189,31 @@ const CourseCard = ({
           <Typography className={classes.pos} color="textSecondary">
             {courseName}
           </Typography>
-          <OngoingOfficeHours
-            className="ongoing"
-            courseNumber={courseNumber}
-            officeHours={officeHours}
-            count={count}
-          >
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={() => {
-                toggleCheckInOut(
-                  user,
-                  courseNumber,
-                  checkInText,
-                  setCheckInText
-                );
-              }}
-              disabled={!areOHOngoing(courseNumber, officeHours).isOngoing}
-              style={{ width: "100%" }}
+          {isProf ? null :
+            <OngoingOfficeHours
+              className="ongoing"
+              courseNumber={courseNumber}
+              officeHours={officeHours}
+              count={count}
             >
-              {checkInText}
-            </Button>
-          </OngoingOfficeHours>
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={() => {
+                  toggleCheckInOut(
+                    user,
+                    courseNumber,
+                    checkInText,
+                    setCheckInText
+                  );
+                }}
+                disabled={!areOHOngoing(courseNumber, officeHours).isOngoing}
+                style={{ width: "100%" }}
+              >
+                {checkInText}
+              </Button>
+            </OngoingOfficeHours>
+          }
         </CardContent>
         <ExpansionPanel>
           <ExpansionPanelSummary
@@ -250,24 +250,25 @@ const CourseCard = ({
                         {officeHours[session_id].location}
                       </Typography>
                     </Grid>
-                    <Grid item xs={6}></Grid> {/* this space allows the Delete button to be aligned to the right of card */}
-                    {isProf ? (<Grid item xs={6}>
-                      <Typography variant="body1" align="right">
-                        <Button
-                          variant="text"
-                          color="secondary"
-                          onClick={() => {
-                            deleteOHSession(
-                              courseNumber,
-                              session_id,
-                              setCourse
-                            );
-                          }}
-                        >
-                          Delete
-                        </Button>
-                      </Typography>
-                    </Grid>) : null}
+                    {isProf ? (
+                      <Grid item xs={12}>
+                        <Typography variant="body1" align="right">
+                          <Button
+                            size="small"
+                            color="secondary"
+                            onClick={() => {
+                              deleteOHSession(
+                                courseNumber,
+                                session_id,
+                                setCourse
+                                );
+                              }}
+                              >
+                            Delete
+                          </Button>
+                          <FormDialog officeHours={officeHours[session_id]} />
+                        </Typography>
+                      </Grid>) : null}
                   </Grid>
                 ) : null
               )}
