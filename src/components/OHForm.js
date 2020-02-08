@@ -1,13 +1,15 @@
 import React from 'react';
 import { Button, Select, MenuItem, ListItem, List, FormControl, InputLabel, DialogActions } from '@material-ui/core';
 import { MuiPickersUtilsProvider, MobileTimePicker } from "@material-ui/pickers";
+import "firebase/database";
+import firebase from "firebase/app";
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DateFnsUtils from '@date-io/date-fns';
 
-const OHForm = ({ courseNumber, officeHours }) => {
+const OHForm = ({ courseNumber, sessionId, officeHours }) => {
 	let isEdit = !(typeof(officeHours) == "undefined")
 	const [open, setOpen] = React.useState(false);
 	const [weekday, setWeekday] = React.useState(isEdit ? officeHours.weekDay : '');
@@ -39,7 +41,41 @@ const OHForm = ({ courseNumber, officeHours }) => {
 
 	const handleChangeLocation = event => {
 		setLocation(event.target.value)
-	}
+  }
+  
+  const addOfficeHourSession = (officeHourSession, courseNumber) => {
+    const ref = firebase.database().ref("courses/" + courseNumber);
+    const uuidv4 = require('uuid/v4');
+    const sessionId = uuidv4();
+    ref.once("value", snapshot => {
+      var data = {
+        TAProf: officeHourSession.TAProf,
+        endTime: officeHourSession.endTime,
+        location: officeHourSession.location,
+        startTime: officeHourSession.startTime,
+        weekDay: officeHourSession.weekDay
+      };
+      var newSession = {};
+      newSession['officeHours/' + sessionId] = data;
+      ref.update(newSession)
+    })
+  }
+  
+  const editOfficeHourSession = (sessionId, officeHourSession, courseNumber) => {
+    const ref = firebase.database().ref("courses/" + courseNumber);
+    ref.once("value", snapshot => {
+      var data = {
+        TAProf: officeHourSession.TAProf,
+        endTime: officeHourSession.endTime,
+        location: officeHourSession.location,
+        startTime: officeHourSession.startTime,
+        weekDay: officeHourSession.weekDay
+      };
+      var editSession = {};
+      editSession["officeHours/" + sessionId] = data;
+      ref.update(editSession);
+    });
+  }
 
 	return (
 		<MuiPickersUtilsProvider utils={DateFnsUtils}>

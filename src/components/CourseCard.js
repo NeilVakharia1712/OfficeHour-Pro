@@ -202,40 +202,40 @@ const CourseCard = ({
               <ExpansionPanelDetails>
                 <Grid container spacing={2}>
                   {
-                    Object.keys(officeHours).map(session_id =>
-                      session_id !== "CheckedInUsers" ? (
-                        <Grid item container key={session_id}>
+                    Object.keys(officeHours).map(sessionId =>
+                      sessionId !== "CheckedInUsers" ? (
+                        <Grid item container key={sessionId}>
                           <Grid item xs={4}>
                             <Typography variant="h6">
                               {formatFullDayOfWeekString(
-                                officeHours[session_id].weekDay
+                                officeHours[sessionId].weekDay
                               )}
                             </Typography>
                           </Grid>
                           <Grid item xs={8}>
                             <Typography variant="h6" align="right">
-                              {formatTime(officeHours[session_id].startTime)} -{" "}
-                              {formatTime(officeHours[session_id].endTime)}
+                              {formatTime(officeHours[sessionId].startTime)} - {formatTime(officeHours[sessionId].endTime)}
                             </Typography>
                           </Grid>
                           <Grid item xs={6}>
-                            {`${officeHours[session_id].instructorName} (${officeHours[session_id].TAProf})`}
+                            {`${officeHours[sessionId].instructorName} (${officeHours[sessionId].TAProf})`}
                           </Grid>
                           <Grid item xs={6}>
                             <Typography variant="body1" align="right">
-                              {officeHours[session_id].location}
+                              {officeHours[sessionId].location}
                             </Typography>
                           </Grid>
                           {
                             isProf ? (
                               <Grid item xs={12}>
                                 <Typography variant="body1" align="right">
-                                  <Button variant="text" color="secondary" onClick={() => {deleteOHSession(courseNumber, session_id, setCourse);}}>
+                                  <Button variant="text" color="secondary" onClick={() => {deleteOHSession(courseNumber, sessionId, setCourse);}}>
                                     Delete
                                   </Button>
                                   <OHForm
                                     courseNumber={courseNumber}
-                                    officeHours={officeHours[session_id]}
+                                    sessionId={sessionId}
+                                    officeHours={officeHours[sessionId]}
                                   />
                                 </Typography>
                               </Grid>
