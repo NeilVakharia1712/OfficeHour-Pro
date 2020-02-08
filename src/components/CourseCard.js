@@ -21,8 +21,7 @@ import {
   formatTime
 } from "./OngoingOfficeHours.js";
 import "../App.css";
-import AddOHForm from "./AddOHForm";
-import EditOHForm from "./EditOHForm";
+import OHForm from "./OHForm";
 
 const useStyles = makeStyles({
   card: {
@@ -170,105 +169,98 @@ const CourseCard = ({
               officeHours={officeHours}
               count={count}
             >
-              <Button
-                variant="contained"
-                color="secondary"
-                onClick={() => {
-                  toggleCheckInOut(
-                    user,
-                    courseNumber,
-                    checkInText,
-                    setCheckInText
-                  );
-                }}
-                disabled={!areOHOngoing(courseNumber, officeHours).isOngoing}
-                style={{ width: "100%" }}
-              >
-                {checkInText}
-              </Button>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={() => {
+                toggleCheckInOut(
+                  user,
+                  courseNumber,
+                  checkInText,
+                  setCheckInText
+                );
+              }}
+              disabled={!areOHOngoing(courseNumber, officeHours).isOngoing}
+              style={{ width: "100%" }}
+            >
+              {checkInText}
+            </Button>
             </OngoingOfficeHours>
           }
         </CardContent>
-        {officeHours !== undefined ? (
-          <ExpansionPanel>
-            <ExpansionPanelSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-            >
-              <Typography className={classes.expandSummary}>
-                All Office Hours:
-              </Typography>
-            </ExpansionPanelSummary>
-            <ExpansionPanelDetails>
-              <Grid container spacing={2}>
-                {Object.keys(officeHours).map(session_id =>
-                  session_id !== "CheckedInUsers" ? (
-                    <Grid item container key={session_id}>
-                      <Grid item xs={4}>
-                        <Typography variant="h6">
-                          {formatFullDayOfWeekString(
-                            officeHours[session_id].weekDay
-                          )}
-                        </Typography>
+        {
+          officeHours !== undefined ? (
+            <ExpansionPanel>
+              <ExpansionPanelSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1a-content"
+              >
+                <Typography className={classes.expandSummary}>
+                  All Office Hours:
+                </Typography>
+              </ExpansionPanelSummary>
+              <ExpansionPanelDetails>
+                <Grid container spacing={2}>
+                  {
+                    Object.keys(officeHours).map(session_id =>
+                      session_id !== "CheckedInUsers" ? (
+                        <Grid item container key={session_id}>
+                          <Grid item xs={4}>
+                            <Typography variant="h6">
+                              {formatFullDayOfWeekString(
+                                officeHours[session_id].weekDay
+                              )}
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={8}>
+                            <Typography variant="h6" align="right">
+                              {formatTime(officeHours[session_id].startTime)} -{" "}
+                              {formatTime(officeHours[session_id].endTime)}
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={6}>
+                            {`${officeHours[session_id].instructorName} (${officeHours[session_id].TAProf})`}
+                          </Grid>
+                          <Grid item xs={6}>
+                            <Typography variant="body1" align="right">
+                              {officeHours[session_id].location}
+                            </Typography>
+                          </Grid>
+                          {
+                            isProf ? (
+                              <Grid item xs={12}>
+                                <Typography variant="body1" align="right">
+                                  <Button variant="text" color="secondary" onClick={() => {deleteOHSession(courseNumber, session_id, setCourse);}}>
+                                    Delete
+                                  </Button>
+                                  <OHForm
+                                    courseNumber={courseNumber}
+                                    officeHours={officeHours[session_id]}
+                                  />
+                                </Typography>
+                              </Grid>
+                            ): null
+                          }
+                          </Grid>
+                      ) : null
+                    )
+                  }
+                  {
+                    isProf ? (
+                      <Grid container justify="center">
+                        <OHForm courseNumber={courseNumber} />
                       </Grid>
-                      <Grid item xs={8}>
-                        <Typography variant="h6" align="right">
-                          {formatTime(officeHours[session_id].startTime)} -{" "}
-                          {formatTime(officeHours[session_id].endTime)}
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={6}>
-                        {`${officeHours[session_id].instructorName} (${officeHours[session_id].TAProf})`}
-                      </Grid>
-                      <Grid item xs={6}>
-                        <Typography variant="body1" align="right">
-                          {officeHours[session_id].location}
-                        </Typography>
-                      </Grid>
-                      {isProf ? (
-                        <Grid item xs={6}>
-                          <EditOHForm
-                            courseNumber={courseNumber}
-                            sessionId={session_id}
-                            officeHours={officeHours}
-                          />
-                        </Grid>
-                      ) : null}
-                      {isProf ? (
-                        <Grid item xs={6}>
-                          <Typography variant="body1" align="right">
-                            <Button
-                              variant="text"
-                              color="secondary"
-                              onClick={() => {
-                                deleteOHSession(
-                                  courseNumber,
-                                  session_id,
-                                  setCourse
-                                );
-                              }}
-                            >
-                              Delete
-                            </Button>
-                          </Typography>
-                        </Grid>
-                      ) : null}
-                    </Grid>
-                  ) : null
-                )}
-                {isProf ? (
-                  <Grid container justify="center">
-                    <AddOHForm courseNumber={courseNumber} />
-                  </Grid>
-                ) : null}
-              </Grid>
-            </ExpansionPanelDetails>
+                    ) : null
+                  }
+                </Grid>
+              </ExpansionPanelDetails>
           </ExpansionPanel>
-        ) : isProf ? (
-          <Grid container justify="center" style={{ marginBottom: "20px" }}>
-            <AddOHForm courseNumber={courseNumber} />
-          </Grid>
-        ) : null}
+          ) : isProf ? (
+            <Grid container justify="center" style={{ marginBottom: "20px" }}>
+              <OHForm courseNumber={courseNumber} />
+            </Grid>
+          ) : null
+        }
       </Card>
     );
   } else {
