@@ -62,7 +62,6 @@ const unchecked = (
   setCheckInText
 ) => {
   const ref = firebase.database().ref("Users/" + user.uid);
-  console.log(checkInText);
   if (checkInText === "Check in") {
     console.log("remove checked in courses");
     toggleCheckInOut(user, courseNumber, "Check out", setCheckInText);
@@ -164,29 +163,31 @@ const CourseCard = ({
           <Typography className={classes.pos} color="textSecondary">
             {courseName}
           </Typography>
-          <OngoingOfficeHours
-            className="ongoing"
-            courseNumber={courseNumber}
-            officeHours={officeHours}
-            count={count}
-          >
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={() => {
-                toggleCheckInOut(
-                  user,
-                  courseNumber,
-                  checkInText,
-                  setCheckInText
-                );
-              }}
-              disabled={!areOHOngoing(courseNumber, officeHours).isOngoing}
-              style={{ width: "100%" }}
+          {isProf ? null :
+            <OngoingOfficeHours
+              className="ongoing"
+              courseNumber={courseNumber}
+              officeHours={officeHours}
+              count={count}
             >
-              {checkInText}
-            </Button>
-          </OngoingOfficeHours>
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={() => {
+                  toggleCheckInOut(
+                    user,
+                    courseNumber,
+                    checkInText,
+                    setCheckInText
+                  );
+                }}
+                disabled={!areOHOngoing(courseNumber, officeHours).isOngoing}
+                style={{ width: "100%" }}
+              >
+                {checkInText}
+              </Button>
+            </OngoingOfficeHours>
+          }
         </CardContent>
         {officeHours !== undefined ? (
           <ExpansionPanel>
