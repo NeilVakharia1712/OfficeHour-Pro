@@ -16,7 +16,6 @@ import "firebase/database";
 import firebase from "firebase/app";
 import OngoingOfficeHours from "./OngoingOfficeHours";
 import {
-  areOHOngoing,
   formatFullDayOfWeekString,
   formatTime
 } from "./OngoingOfficeHours.js";
@@ -106,6 +105,7 @@ const toggleCheckInOut = (user, courseNumber, isCheckedIn) => {
       .update({
         checkedInCourse: courseNumber
       });
+
   } else {
     firebase
       .database()
@@ -118,6 +118,8 @@ const toggleCheckInOut = (user, courseNumber, isCheckedIn) => {
       .ref("Users/" + user.uid)
       .child("checkedInCourse")
       .remove();
+
+    isCheckedIn = false;
   }
 };
 
@@ -163,20 +165,24 @@ const CourseCard = ({
               officeHours={officeHours}
               count={count}
             >
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={() => {
-                toggleCheckInOut(
-                  user,
-                  courseNumber,
-                  isCheckedIn
-                );
-              }}
-              disabled={!areOHOngoing(courseNumber, officeHours).isOngoing}
-              style={{ width: "100%" }}
-            >
-              {isCheckedIn? "Check out" : "Check in"}
+              {isCheckedIn ?
+              <Typography variant="subtitle2" align="center" color="secondary" style={{ marginBottom: "7px" }}>
+                Successfully checked in!
+              </Typography> : null}
+              <Button
+                variant={isCheckedIn ? "outlined" : "contained"}
+                color="primary"
+                onClick={() => {
+                  toggleCheckInOut(
+                    user,
+                    courseNumber,
+                    isCheckedIn
+                  );
+                }}
+                disabled={isCheckedIn}
+                style={{ width: "100%" }}
+              >
+                check in
             </Button>
             </OngoingOfficeHours>
           }
@@ -235,9 +241,9 @@ const CourseCard = ({
                                   </Button>
                                 </Typography>
                               </Grid>
-                            ): null
+                            ) : null
                           }
-                          </Grid>
+                        </Grid>
                       ) : null
                     )
                   }
@@ -250,7 +256,7 @@ const CourseCard = ({
                   }
                 </Grid>
               </ExpansionPanelDetails>
-          </ExpansionPanel>
+            </ExpansionPanel>
           ) : isProf ? (
             <Grid container justify="center" style={{ marginBottom: "20px" }}>
               <OHForm courseNumber={courseNumber} />
@@ -276,11 +282,11 @@ const CourseCard = ({
                 onChange={() => {
                   enroll
                     ? unchecked(
-                        user,
-                        courseNumber,
-                        setEnroll,
-                        isCheckedIn
-                      )
+                      user,
+                      courseNumber,
+                      setEnroll,
+                      isCheckedIn
+                    )
                     : checked(user, courseNumber, setEnroll);
                 }}
               />
