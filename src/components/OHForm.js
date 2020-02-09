@@ -14,6 +14,7 @@ const OHForm = ({ courseNumber, sessionId, officeHours }) => {
 	const [open, setOpen] = React.useState(false);
 	const [weekday, setWeekday] = React.useState(isEdit ? officeHours.weekDay : '');
 	const [instructor, setInstructor] = React.useState(isEdit ? officeHours.TAProf: '')
+  const [instructorName, setInstructorName] = React.useState(isEdit ? officeHours.instructorName : '')
 	const [email, setEmail] = React.useState('')
 	const [start, setStart] = React.useState(isEdit? new Date("2018-01-01T" + officeHours.startTime + ":00"):new Date("2018-01-01T00:00:00"))
 	const [end, setEnd] = React.useState(isEdit? new Date("2018-01-01T" + officeHours.endTime + ":00"):new Date("2018-01-01T00:00:00"))
@@ -26,6 +27,16 @@ const OHForm = ({ courseNumber, sessionId, officeHours }) => {
 	const handleClose = () => {
 		setOpen(false);
 	};
+
+  const handleChangeStartTime = (value) => {
+    console.log(value);
+    const hours = value.getUTCHours() - 6;
+    const mins = value.getUTCMinutes();
+    const timeText = hours + ':' + mins;
+
+    setStart(hours + ':' + mins);
+    console.log(value.toTimeString().split(' ')[0]);
+  }
 
 	const handleChangeWeekday = event => {
 		setWeekday(event.target.value);
@@ -42,38 +53,52 @@ const OHForm = ({ courseNumber, sessionId, officeHours }) => {
 	const handleChangeLocation = event => {
 		setLocation(event.target.value)
   }
-  
-  const addOfficeHourSession = (officeHourSession, courseNumber) => {
+
+  const handleChangeInstructorName = event => {
+    setInstructorName(event.target.value)
+  }
+
+  const addOfficeHourSession = (courseNumber) => {
     const ref = firebase.database().ref("courses/" + courseNumber);
     const uuidv4 = require('uuid/v4');
     const sessionId = uuidv4();
+    const startTime = start.toTimeString().split(' ')[0].slice(0, 5);
+    const endTime = end.toTimeString().split(' ')[0].slice(0, 5);
     ref.once("value", snapshot => {
       var data = {
-        TAProf: officeHourSession.TAProf,
-        endTime: officeHourSession.endTime,
-        location: officeHourSession.location,
-        startTime: officeHourSession.startTime,
-        weekDay: officeHourSession.weekDay
+        TAProf: instructor,
+        endTime: endTime,
+        location: location,
+        startTime: startTime,
+        instructorName: instructorName,
+        email: email,
+        weekDay: weekday
       };
       var newSession = {};
       newSession['officeHours/' + sessionId] = data;
       ref.update(newSession)
+      handleClose();
     })
   }
-  
-  const editOfficeHourSession = (sessionId, officeHourSession, courseNumber) => {
+
+  const editOfficeHourSession = (sessionId, courseNumber) => {
     const ref = firebase.database().ref("courses/" + courseNumber);
+    const startTime = start.toTimeString().split(' ')[0].slice(0, 5);
+    const endTime = end.toTimeString().split(' ')[0].slice(0, 5);
     ref.once("value", snapshot => {
       var data = {
-        TAProf: officeHourSession.TAProf,
-        endTime: officeHourSession.endTime,
-        location: officeHourSession.location,
-        startTime: officeHourSession.startTime,
-        weekDay: officeHourSession.weekDay
+        TAProf: instructor,
+        endTime: endTime,
+        location: location,
+        startTime: startTime,
+        instructorName: instructorName,
+        email: email,
+        weekDay: weekday
       };
       var editSession = {};
       editSession["officeHours/" + sessionId] = data;
       ref.update(editSession);
+      handleClose();
     });
   }
 
@@ -93,6 +118,9 @@ const OHForm = ({ courseNumber, sessionId, officeHours }) => {
 						<ListItem>
 							<TextField label="Instructor" value={instructor} onChange={handleChangeInstructor} />
 						</ListItem>
+            <ListItem>
+              <TextField label="Instructor Name" value={instructorName} onChange={handleChangeInstructorName} />
+            </ListItem>
 						<ListItem>
 							<TextField label="Instructor Email" value={email} onChange={handleChangeEmail} />
 						</ListItem>
@@ -138,7 +166,13 @@ const OHForm = ({ courseNumber, sessionId, officeHours }) => {
 				</DialogContent>
 				<DialogActions>
 					<Button onClick={()=>{setOpen(false)}}>Cancel</Button>
-					<Button>Submit</Button>
+          {
+            isEdit? (
+              <Button onClick={()=>{editOfficeHourSession(sessionId, courseNumber)}}>Submit</Button>
+            ) : (
+              <Button onClick={()=>{addOfficeHourSession(courseNumber)}}>Submit</Button>
+            )
+          }
 				</DialogActions>
 			</Dialog>
 		</MuiPickersUtilsProvider>
