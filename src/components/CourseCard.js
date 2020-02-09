@@ -143,13 +143,35 @@ const CourseCard = ({
   const [enroll, setEnroll] = useState(isEnrolled);
 
   useEffect(() => {
-    const ref = firebase
-      .database()
-      .ref("courses/" + courseNumber + "/officeHours/CheckedInUsers");
-    ref.on("value", snapshot => {
-      const count = snapshot.numChildren();
-      setCount(count);
-    });
+    const nums = [] 
+    const dbRef = firebase.database().ref("courses/" + courseNumber + "/officeHours/CheckedInUsers");
+    dbRef.orderByChild("time").limitToLast(3).on("child_added", snapshot => {
+      nums.push(snapshot.val().level)
+     });
+
+     if(nums.length == 0){
+      console.log('0')
+      const count = 0; 
+      setCount(count)
+     }
+     else if(nums.length == 1){
+       console.log(nums[0] * 1)
+       const count = nums[0]*1
+       setCount(count)
+
+     }
+     else if(nums.length == 2){
+        console.log(nums[1]* 0.7 + nums[0]*0.3)
+        const count = nums[1]* 0.7 + nums[0]*0.3
+        setCount(count)
+     }
+
+     else if(nums.length == 3){
+      console.log(nums[2], nums[1], nums[0]) 
+      console.log(nums[2]*0.6 + nums[1]*0.3 + nums[0]*0.1)
+      const count = nums[2]*0.6 + nums[1]*0.3 + nums[0]*0.1
+      setCount(count)
+     }
   });
 
   if (mode === "CourseList") {
