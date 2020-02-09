@@ -16,12 +16,12 @@ import "firebase/database";
 import firebase from "firebase/app";
 import OngoingOfficeHours from "./OngoingOfficeHours";
 import {
-  areOHOngoing,
   formatFullDayOfWeekString,
   formatTime
 } from "./OngoingOfficeHours.js";
 import "../App.css";
 import OHForm from "./OHForm";
+import '../App.css';
 
 const useStyles = makeStyles({
   card: {
@@ -57,13 +57,12 @@ const unchecked = (
   user,
   courseNumber,
   setEnroll,
-  checkInText,
-  setCheckInText
+  isCheckedIn
 ) => {
   const ref = firebase.database().ref("Users/" + user.uid);
-  if (checkInText === "Check in") {
+  if (!isCheckedIn) {
     console.log("remove checked in courses");
-    toggleCheckInOut(user, courseNumber, "Check out", setCheckInText);
+    toggleCheckInOut(user, courseNumber, true);
   }
   ref.once("value", snapshot => {
     let courseList = snapshot.val()["courses"];
@@ -91,8 +90,8 @@ const deleteOHSession = (courseNumber, sessionId, setCourse) => {
     });
 };
 
-const toggleCheckInOut = (user, courseNumber, checkInText, setCheckInText) => {
-  if (checkInText === "Check in") {
+const toggleCheckInOut = (user, courseNumber, isCheckedIn) => {
+  if (!isCheckedIn) {
     firebase
       .database()
       .ref("courses/" + courseNumber + "/officeHours/CheckedInUsers")
@@ -106,8 +105,8 @@ const toggleCheckInOut = (user, courseNumber, checkInText, setCheckInText) => {
       .update({
         checkedInCourse: courseNumber
       });
-    setCheckInText("Check out");
-  } else if (checkInText === "Check out") {
+
+  } else {
     firebase
       .database()
       .ref("courses/" + courseNumber + "/officeHours/CheckedInUsers")
@@ -120,7 +119,7 @@ const toggleCheckInOut = (user, courseNumber, checkInText, setCheckInText) => {
       .child("checkedInCourse")
       .remove();
 
-    setCheckInText("Check in");
+    isCheckedIn = false;
   }
 };
 
@@ -136,9 +135,6 @@ const CourseCard = ({
   isProf
 }) => {
   const classes = useStyles();
-  const [checkInText, setCheckInText] = useState(
-    isCheckedIn ? "Check out" : "Check in"
-  );
   const [count, setCount] = useState(0);
   const [enroll, setEnroll] = useState(isEnrolled);
 
@@ -191,21 +187,24 @@ const CourseCard = ({
               officeHours={officeHours}
               count={count}
             >
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={() => {
-                toggleCheckInOut(
-                  user,
-                  courseNumber,
-                  checkInText,
-                  setCheckInText
-                );
-              }}
-              disabled={!areOHOngoing(courseNumber, officeHours).isOngoing}
-              style={{ width: "100%" }}
-            >
-              {checkInText}
+              {isCheckedIn ?
+              <Typography variant="subtitle2" align="center" color="secondary" style={{ marginBottom: "7px" }}>
+                Successfully checked in!
+              </Typography> : null}
+              <Button
+                variant={isCheckedIn ? "outlined" : "contained"}
+                color="primary"
+                onClick={() => {
+                  toggleCheckInOut(
+                    user,
+                    courseNumber,
+                    isCheckedIn
+                  );
+                }}
+                disabled={isCheckedIn}
+                style={{ width: "100%" }}
+              >
+                check in
             </Button>
             </OngoingOfficeHours>
           }
@@ -247,23 +246,26 @@ const CourseCard = ({
                               {officeHours[sessionId].location}
                             </Typography>
                           </Grid>
+                          <Grid item xs={8}>
+                            {`${officeHours[sessionId].email}`}
+                          </Grid>
                           {
                             isProf ? (
                               <Grid item xs={12}>
                                 <Typography variant="body1" align="right">
-                                  <Button variant="text" color="secondary" onClick={() => {deleteOHSession(courseNumber, sessionId, setCourse);}}>
-                                    Delete
-                                  </Button>
                                   <OHForm
                                     courseNumber={courseNumber}
                                     sessionId={sessionId}
                                     officeHours={officeHours[sessionId]}
                                   />
+                                  <Button variant="text" color="secondary" onClick={() => {deleteOHSession(courseNumber, sessionId, setCourse);}}>
+                                    Delete
+                                  </Button>
                                 </Typography>
                               </Grid>
-                            ): null
+                            ) : null
                           }
-                          </Grid>
+                        </Grid>
                       ) : null
                     )
                   }
@@ -276,7 +278,7 @@ const CourseCard = ({
                   }
                 </Grid>
               </ExpansionPanelDetails>
-          </ExpansionPanel>
+            </ExpansionPanel>
           ) : isProf ? (
             <Grid container justify="center" style={{ marginBottom: "20px" }}>
               <OHForm courseNumber={courseNumber} />
@@ -302,12 +304,11 @@ const CourseCard = ({
                 onChange={() => {
                   enroll
                     ? unchecked(
-                        user,
-                        courseNumber,
-                        setEnroll,
-                        checkInText,
-                        setCheckInText
-                      )
+                      user,
+                      courseNumber,
+                      setEnroll,
+                      isCheckedIn
+                    )
                     : checked(user, courseNumber, setEnroll);
                 }}
               />

@@ -235,7 +235,6 @@ const OngoingOfficeHours = props => {
               </Grid>
             </Grid>
           </CardContent>
-          <Divider />
           <Grid item xs={12}>
             {props.children}
           </Grid>

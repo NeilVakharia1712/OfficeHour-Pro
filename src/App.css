@@ -33,7 +33,7 @@
 .MuiCardContent-root .MuiCard-root{
   margin: 10px 0px 10px 0px;
   border: 1px solid;
-  color: #f50056;
+  color: #3f51b5;
   border-radius: 7px;
 }
 
@@ -64,4 +64,18 @@
 
 .columns .column {
   background-color: #fafafa;
+}
+
+.MuiDialog-paperWidthSm {
+  padding: 0 4%;
+  width: 25%;
+  min-width: 340px;
+}
+
+.MuiInputBase-root.MuiInput-root.MuiInput-underline.MuiInputBase-formControl.MuiInput-formControl {
+  width: 100%;
+}
+
+.MuiFormControl-root.MuiTextField-root {
+  width: 100%;
 }
