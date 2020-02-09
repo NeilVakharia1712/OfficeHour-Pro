@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Card,
-  CardActions,
   CardContent,
   Button,
   Typography,
@@ -10,18 +9,19 @@ import {
   Checkbox,
   ExpansionPanel,
   ExpansionPanelDetails,
-  ExpansionPanelSummary,
+  ExpansionPanelSummary
 } from "@material-ui/core";
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import "firebase/database";
 import firebase from "firebase/app";
 import OngoingOfficeHours from "./OngoingOfficeHours";
 import {
-  areOHOngoing,
   formatFullDayOfWeekString,
-  formatTime
 } from "./OngoingOfficeHours.js";
+import FeedBackSelector from './FeedbackSelector'
 import "../App.css";
+import OHForm from "./OHForm";
+import '../App.css';
 
 const useStyles = makeStyles({
   card: {
@@ -32,7 +32,7 @@ const useStyles = makeStyles({
   },
   expandSummary: {
     fontSize: 14,
-    color: 'grey'
+    color: "grey"
   }
 });
 
@@ -47,13 +47,18 @@ const checked = (user, courseNumber, setEnroll) => {
       courseList.push(courseNumber);
     }
     ref.update({
-      ["courses"]: courseList
+      "courses": courseList
     });
   });
   setEnroll(true);
 };
 
-const unchecked = (user, courseNumber, setEnroll) => {
+const unchecked = (
+  user,
+  courseNumber,
+  setEnroll,
+  isCheckedIn
+) => {
   const ref = firebase.database().ref("Users/" + user.uid);
   ref.once("value", snapshot => {
     let courseList = snapshot.val()["courses"];
@@ -70,38 +75,15 @@ const unchecked = (user, courseNumber, setEnroll) => {
   setEnroll(false);
 };
 
-const toggleCheckInOut = (user, courseNumber, checkInText, setCheckInText) => {
-  if (checkInText === "Check in") {
-    firebase
-      .database()
-      .ref("courses/" + courseNumber + "/officeHours/CheckedInUsers")
-      .update({
-        [user.uid]: user.uid
-      });
-
-    firebase
-      .database()
-      .ref("Users/" + user.uid)
-      .update({
-        checkedInCourse: courseNumber
-      });
-
-    setCheckInText("Check out");
-  } else if (checkInText === "Check out") {
-    firebase
-      .database()
-      .ref("courses/" + courseNumber + "/officeHours/CheckedInUsers")
-      .child(user.uid)
-      .remove();
-
-    firebase
-      .database()
-      .ref("Users/" + user.uid)
-      .child("checkedInCourse")
-      .remove();
-
-    setCheckInText("Check in");
-  }
+const deleteOHSession = (courseNumber, sessionId, setCourse) => {
+  firebase
+    .database()
+    .ref("courses/" + courseNumber + "/officeHours")
+    .child(sessionId)
+    .remove()
+    .then(() => {
+      console.log("refresh");
+    });
 };
 
 const CourseCard = ({
@@ -111,86 +93,161 @@ const CourseCard = ({
   officeHours,
   isCheckedIn,
   mode,
-  isEnrolled = false
+  isEnrolled = false,
+  setCourse,
+  isProf
 }) => {
   const classes = useStyles();
-  const [checkInText, setCheckInText] = useState(
-    isCheckedIn ? "Check out" : "Check in"
-  );
   const [count, setCount] = useState(0);
   const [enroll, setEnroll] = useState(isEnrolled);
+  const [feedbackSeletorOpen, setFeedbackSelectorOpen] = useState(false)
 
   useEffect(() => {
-    //Number Of Students
-    const ref = firebase
-      .database()
-      .ref("courses/" + courseNumber + "/officeHours/CheckedInUsers");
-    ref.on("value", snapshot => {
-      const count = snapshot.numChildren();
-      setCount(count);
-    });
+    const nums = [] 
+    const dbRef = firebase.database().ref("courses/" + courseNumber + "/officeHours/CheckedInUsers");
+    dbRef.orderByChild("time").limitToLast(3).on("child_added", snapshot => {
+      nums.push(snapshot.val().level)
+     });
+
+     if(nums.length === 0){
+      console.log('0')
+      const count = 0; 
+      setCount(count)
+     }
+     else if(nums.length === 1){
+       console.log(nums[0] * 1)
+       const count = nums[0]*1
+       setCount(count)
+
+     }
+     else if(nums.length === 2){
+        console.log(nums[1]* 0.7 + nums[0]*0.3)
+        const count = nums[1]* 0.7 + nums[0]*0.3
+        setCount(count)
+     }
+
+     else if(nums.length === 3){
+      console.log(nums[2], nums[1], nums[0]) 
+      console.log(nums[2]*0.6 + nums[1]*0.3 + nums[0]*0.1)
+      const count = nums[2]*0.6 + nums[1]*0.3 + nums[0]*0.1
+      setCount(count)
+     }
   });
 
   if (mode === "CourseList") {
     return (
-      <Card className={classes.card}>
+      <Card className={classes.card} style={{ marginTop: "10px" }}>
         <CardContent>
+          <FeedBackSelector feedbackOpen={feedbackSeletorOpen} setFeedbackOpen={setFeedbackSelectorOpen} user={user} courseNumber={courseNumber} />
           <Typography variant="h5" component="h2">
             {courseNumber}
           </Typography>
           <Typography className={classes.pos} color="textSecondary">
             {courseName}
           </Typography>
-          <OngoingOfficeHours
-            courseNumber={courseNumber}
-            officeHours={officeHours}
-            count={count}
-          />
-        </CardContent>
-        <CardActions>
-          <Button
-            variant="outlined"
-            color="secondary"
-            onClick={() => {
-              toggleCheckInOut(user, courseNumber, checkInText, setCheckInText);
-            }}
-            size="small"
-            disabled={!areOHOngoing(courseNumber, officeHours).isOngoing}
-          >
-            {checkInText}
-          </Button>
-        </CardActions>
-        <ExpansionPanel>
-          <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content">
-            <Typography className={classes.expandSummary}>All Office Hours:</Typography>
-          </ExpansionPanelSummary>
-          <ExpansionPanelDetails>
-            <Grid container spacing={2}>
-              {Object.keys(officeHours).map(session_id =>
-                session_id !== "CheckedInUsers" ? (
-                    <Grid item container>
-                      <Grid item xs={4}>
-                        <Typography variant='h6'>{formatFullDayOfWeekString(officeHours[session_id].weekDay)}</Typography>
-                      </Grid>
-                      <Grid item xs={8}>
-                        <Typography variant='h6' align='right'>
-                          {formatTime(officeHours[session_id].startTime)} - {formatTime(officeHours[session_id].endTime)}
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={6}>
-                        {officeHours[session_id].TAProf}
-                      </Grid>
-                      <Grid item xs={6}>
-                        <Typography variant='body1' align='right'>
-                          {officeHours[session_id].location}
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                ) : null)
+          {isProf ? null :
+            <OngoingOfficeHours
+              className="ongoing"
+              courseNumber={courseNumber}
+              officeHours={officeHours}
+              count={count}
+            >
+              {
+                isCheckedIn?
+                <Typography variant="subtitle2" align="center" color="secondary" style={{ marginBottom: "7px" }}>
+                  Successfully checked in!
+                </Typography> : null
               }
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => {
+                  setFeedbackSelectorOpen(true)
+                }}
+                disabled={isCheckedIn}
+                style={{ width: "100%" }}
+              >
+                  check in
+              </Button>
+            </OngoingOfficeHours>
+          }
+        </CardContent>
+        {
+          officeHours !== undefined ? (
+            <ExpansionPanel>
+              <ExpansionPanelSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1a-content"
+              >
+                <Typography className={classes.expandSummary}>
+                  All Office Hours:
+                </Typography>
+              </ExpansionPanelSummary>
+              <ExpansionPanelDetails>
+                <Grid container spacing={2}>
+                  {
+                    Object.keys(officeHours).map(sessionId =>
+                      sessionId !== "CheckedInUsers" ? (
+                        <Grid item container key={sessionId}>
+                          <Grid item xs={4}>
+                            <Typography variant="h6">
+                              {formatFullDayOfWeekString(
+                                officeHours[sessionId].weekDay
+                              )}
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={8}>
+                            <Typography variant="h6" align="right">
+                              {officeHours[sessionId].startTime} - {officeHours[sessionId].endTime}
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={6}>
+                            {`${officeHours[sessionId].instructorName} (${officeHours[sessionId].TAProf})`}
+                          </Grid>
+                          <Grid item xs={6}>
+                            <Typography variant="body1" align="right">
+                              {officeHours[sessionId].location}
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={8}>
+                            {`${officeHours[sessionId].email}`}
+                          </Grid>
+                          {
+                            isProf ? (
+                              <Grid item xs={12}>
+                                <Typography variant="body1" align="right">
+                                  <OHForm
+                                    courseNumber={courseNumber}
+                                    sessionId={sessionId}
+                                    officeHours={officeHours[sessionId]}
+                                  />
+                                  <Button variant="text" color="secondary" onClick={() => {deleteOHSession(courseNumber, sessionId, setCourse);}}>
+                                    Delete
+                                  </Button>
+                                </Typography>
+                              </Grid>
+                            ) : null
+                          }
+                        </Grid>
+                      ) : null
+                    )
+                  }
+                  {
+                    isProf ? (
+                      <Grid container justify="center">
+                        <OHForm courseNumber={courseNumber} />
+                      </Grid>
+                    ) : null
+                  }
+                </Grid>
+              </ExpansionPanelDetails>
+            </ExpansionPanel>
+          ) : isProf ? (
+            <Grid container justify="center" style={{ marginBottom: "20px" }}>
+              <OHForm courseNumber={courseNumber} />
             </Grid>
-          </ExpansionPanelDetails>
-        </ExpansionPanel>
+          ) : null
+        }
       </Card>
     );
   } else {
@@ -209,7 +266,12 @@ const CourseCard = ({
                 checked={enroll}
                 onChange={() => {
                   enroll
-                    ? unchecked(user, courseNumber, setEnroll)
+                    ? unchecked(
+                      user,
+                      courseNumber,
+                      setEnroll,
+                      isCheckedIn
+                    )
                     : checked(user, courseNumber, setEnroll);
                 }}
               />

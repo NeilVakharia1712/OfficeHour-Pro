@@ -1,5 +1,6 @@
 import React from "react";
 import Typography from "@material-ui/core/Typography";
+import { Grid, Card, CardContent } from "@material-ui/core";
 
 const getCurrentTime = () => {
   const now = new Date();
@@ -32,6 +33,7 @@ const convertDayOfWeekStrToNum = day => {
 
 export const areOHOngoing = (courseNumber, officeHours) => {
   const [day, hour, minute] = getCurrentTime();
+  if (officeHours === undefined || officeHours.length === 0) return false;
   const sessions = Object.values(officeHours).filter(
     session => convertDayOfWeekStrToNum(session.weekDay) === day
   );
@@ -69,22 +71,6 @@ export const areOHOngoing = (courseNumber, officeHours) => {
   };
 };
 
-export const formatTime = time => {
-  console.log("time", time);
-  if (!time) return;
-  const timeArray = time.split(":");
-  var timeHour = timeArray[0];
-  if (Number(timeHour) > 12) {
-    timeHour = Number(timeHour) - 12;
-  }
-  var timeAMPM = "am";
-  if (Number(timeArray[0]) >= 12) {
-    timeAMPM = "pm";
-  }
-  const timeMinute = timeArray[1];
-  return `${timeHour}:${timeMinute}${timeAMPM}`;
-};
-
 export const formatFullDayOfWeekString = day => {
   switch (day) {
     case "su":
@@ -110,6 +96,7 @@ const findNextOHSession = officeHours => {
   var [nowDay, nowHour] = getCurrentTime();
   var nextSessionThisWeek = undefined;
   var firstSessionNextWeek = undefined;
+  if (officeHours === undefined || officeHours.length === 0) return null;
   for (var session of Object.values(officeHours)) {
     if (typeof session !== "object" || !("weekDay" in session)) {
       continue;
@@ -176,38 +163,70 @@ const findNextOHSession = officeHours => {
       <Typography variant="body2" component="p">
         Next Office Hours Session:{" "}
         {formatFullDayOfWeekString(nextSession.session.weekDay)},{" "}
-        {formatTime(nextSession.session.startTime)} -{" "}
-        {formatTime(nextSession.session.endTime)}
+        {nextSession.session.startTime} - {nextSession.session.endTime}
       </Typography>
     </div>
   );
 };
 
-const OngoingOfficeHours = ({ courseNumber, officeHours, count }) => {
-  const ongoingSession = areOHOngoing(courseNumber, officeHours);
+const getStatus = (count) => {
+  const description = ['Empty', 'Little Crowded', 'Moderate Crowded', 'Very Crowded'];
+  return description[Math.floor(count)]
+}
+const OngoingOfficeHours = props => {
+  const ongoingSession = areOHOngoing(props.courseNumber, props.officeHours);
 
   return (
     <div>
       {ongoingSession.isOngoing ? (
-        <div>
-          <Typography variant="body2" component="p">
-            Ongoing Office Hours Session:{" "}
-            {formatTime(ongoingSession.info.startTime)} -{" "}
-            {formatTime(ongoingSession.info.endTime)}
-          </Typography>
-          <p>
-            TA/Professor: {ongoingSession.info.TAProf}
-            <br />
-            Location: {ongoingSession.info.location}
-            <br />
-            Room Capacity: {ongoingSession.info.desiredCapacity}
-          </p>
-          <p className="des">Current Number of Students:</p>
-          <p className="des count">{count}</p>
-        </div>
+        <Card variant="outlined">
+          <CardContent>
+            <Grid container item>
+              <Grid item container xs={8}>
+                <Typography variant="body1" component="p">
+                  Ongoing Office Hours:
+                </Typography>
+                <Grid item xs={8}>
+                  <Typography variant="h6">
+                    {ongoingSession.info.startTime} - {ongoingSession.info.endTime}
+                  </Typography>
+                </Grid>
+                <Grid item xs={12}>
+                  <Typography variant="body1">
+                    {ongoingSession.info.location}
+                  </Typography>
+                </Grid>
+                <Grid item xs={12}>
+                  <Typography variant="body1" style={{ width: "100%" }}>
+                    {ongoingSession.info.instructorName}
+                  </Typography>
+                </Grid>
+              </Grid>
+              <Grid item container xs={4}>
+                <Typography
+                  variant="body1"
+                  align="right"
+                  style={{ width: "100%" }}
+                >
+                  Current Status
+                </Typography>
+                  <Typography
+                    variant="h6"
+                    align="right"
+                    style={{ width: "100%" }}
+                  >
+                    {getStatus(props.count)}
+                  </Typography>
+              </Grid>
+            </Grid>
+          </CardContent>
+          <Grid item xs={12}>
+            {props.children}
+          </Grid>
+        </Card>
       ) : (
-        findNextOHSession(officeHours)
-      )}
+          findNextOHSession(props.officeHours)
+        )}
     </div>
   );
 };

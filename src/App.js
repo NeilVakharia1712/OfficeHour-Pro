@@ -26,6 +26,7 @@ const App = () => {
 	const [schedule, setSchedule] = useState(null);
 	const [courses, setCourse] = useState([]);
 	const [checkedInCourse, setCheckedInCourse] = useState(null);
+	const [isProf, setIsProf] = useState(false);
 
 	useEffect(() => {
 		firebase.auth().onAuthStateChanged(setUser);
@@ -36,11 +37,17 @@ const App = () => {
 			if (snapshot.val()) setSchedule(snapshot.val());
 		}
 		const courseDb = firebase.database().ref('courses');
-		courseDb.once("value", getCourseInfo, error => alert(error));
+		courseDb.on("value", getCourseInfo, error => alert(error));
 	}, [])
+
+	const verifyEmail = (email) => {
+		const re = /u.northwestern.edu/g;
+		return re.test(email)
+	}
 
 	useEffect(() => {
 		if (user) {
+			setIsProf(verifyEmail(user.email))
 			const updateUserCourse = (snapshot) => {
 				if (snapshot.val()) {
 					setCourse(snapshot.val().courses)
@@ -53,22 +60,34 @@ const App = () => {
 			}
 			const userDb = firebase.database().ref('Users/' + user.uid);
 			userDb.on('value', updateUserCourse);
-			// eslint-disable-next-line
 		}
 	}, [user])
 
 	return (
-		<Container disableGutters>
-			<ButtonAppBar user={user} />
-			<Slide direction="left" in={!mode} mountOnEnter unmountOnExit>
-				<div><CourseList user={user} schedule={schedule} courses={courses} checkedInCourse={checkedInCourse} mode={mode} setMode={setMode} /></div>
-			</Slide>
-			<Slide direction="right" in={mode} mountOnEnter unmountOnExit>
-				<div><AllCourseList schedule={schedule} user={user} courses={courses} /></div>
-			</Slide>
-			{user?<FloatingActionButtons mode={mode} setMode={setMode}/> : <></>}
-		</Container>
-	)
+    <Container disableGutters>
+      <ButtonAppBar user={user} />
+      <Slide direction="left" in={!mode} mountOnEnter unmountOnExit>
+        <div>
+          <CourseList
+            user={user}
+            schedule={schedule}
+            courses={courses}
+            setCourse={setCourse}
+            checkedInCourse={checkedInCourse}
+            mode={mode}
+            setMode={setMode}
+            isProf={isProf}
+          />
+        </div>
+      </Slide>
+      <Slide direction="right" in={mode} mountOnEnter unmountOnExit>
+        <div>
+          <AllCourseList schedule={schedule} user={user} courses={courses} isProf={isProf} />
+        </div>
+      </Slide>
+      {user ? <FloatingActionButtons mode={mode} setMode={setMode} /> : <></>}
+    </Container>
+  );
 };
 
 export default App;
