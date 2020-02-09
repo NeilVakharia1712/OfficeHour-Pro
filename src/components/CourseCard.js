@@ -145,24 +145,24 @@ const CourseCard = ({
       nums.push(snapshot.val().level)
      });
 
-     if(nums.length == 0){
+     if(nums.length === 0){
       console.log('0')
       const count = 0; 
       setCount(count)
      }
-     else if(nums.length == 1){
+     else if(nums.length === 1){
        console.log(nums[0] * 1)
        const count = nums[0]*1
        setCount(count)
 
      }
-     else if(nums.length == 2){
+     else if(nums.length === 2){
         console.log(nums[1]* 0.7 + nums[0]*0.3)
         const count = nums[1]* 0.7 + nums[0]*0.3
         setCount(count)
      }
 
-     else if(nums.length == 3){
+     else if(nums.length === 3){
       console.log(nums[2], nums[1], nums[0]) 
       console.log(nums[2]*0.6 + nums[1]*0.3 + nums[0]*0.1)
       const count = nums[2]*0.6 + nums[1]*0.3 + nums[0]*0.1
