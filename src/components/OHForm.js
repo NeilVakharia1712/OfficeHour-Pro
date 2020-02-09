@@ -168,9 +168,19 @@ const OHForm = ({ courseNumber, sessionId, officeHours }) => {
 					<Button onClick={()=>{setOpen(false)}}>Cancel</Button>
           {
             isEdit? (
-              <Button onClick={()=>{editOfficeHourSession(sessionId, courseNumber)}}>Submit</Button>
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={()=>{editOfficeHourSession(sessionId, courseNumber)}}>
+                Submit
+              </Button>
             ) : (
-              <Button onClick={()=>{addOfficeHourSession(courseNumber)}}>Submit</Button>
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={()=>{addOfficeHourSession(courseNumber)}}>
+                Submit
+              </Button>
             )
           }
 				</DialogActions>

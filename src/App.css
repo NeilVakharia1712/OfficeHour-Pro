@@ -65,3 +65,17 @@
 .columns .column {
   background-color: #fafafa;
 }
+
+.MuiDialog-paperWidthSm {
+  padding: 0 4%;
+  width: 25%;
+  min-width: 340px;
+}
+
+.MuiInputBase-root.MuiInput-root.MuiInput-underline.MuiInputBase-formControl.MuiInput-formControl {
+  width: 100%;
+}
+
+.MuiFormControl-root.MuiTextField-root {
+  width: 100%;
+}

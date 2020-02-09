@@ -22,6 +22,7 @@ import {
 } from "./OngoingOfficeHours.js";
 import "../App.css";
 import OHForm from "./OHForm";
+import '../App.css';
 
 const useStyles = makeStyles({
   card: {
@@ -217,18 +218,21 @@ const CourseCard = ({
                               {officeHours[sessionId].location}
                             </Typography>
                           </Grid>
+                          <Grid item xs={8}>
+                            {`${officeHours[sessionId].email}`}
+                          </Grid>
                           {
                             isProf ? (
                               <Grid item xs={12}>
                                 <Typography variant="body1" align="right">
-                                  <Button variant="text" color="secondary" onClick={() => {deleteOHSession(courseNumber, sessionId, setCourse);}}>
-                                    Delete
-                                  </Button>
                                   <OHForm
                                     courseNumber={courseNumber}
                                     sessionId={sessionId}
                                     officeHours={officeHours[sessionId]}
                                   />
+                                  <Button variant="text" color="secondary" onClick={() => {deleteOHSession(courseNumber, sessionId, setCourse);}}>
+                                    Delete
+                                  </Button>
                                 </Typography>
                               </Grid>
                             ): null
