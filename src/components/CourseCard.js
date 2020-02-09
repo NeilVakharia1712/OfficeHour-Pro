@@ -17,7 +17,6 @@ import firebase from "firebase/app";
 import OngoingOfficeHours from "./OngoingOfficeHours";
 import {
   formatFullDayOfWeekString,
-  formatTime
 } from "./OngoingOfficeHours.js";
 import FeedBackSelector from './FeedbackSelector'
 import "../App.css";
@@ -48,7 +47,7 @@ const checked = (user, courseNumber, setEnroll) => {
       courseList.push(courseNumber);
     }
     ref.update({
-      ["courses"]: courseList
+      "courses": courseList
     });
   });
   setEnroll(true);
@@ -199,7 +198,7 @@ const CourseCard = ({
                           </Grid>
                           <Grid item xs={8}>
                             <Typography variant="h6" align="right">
-                              {formatTime(officeHours[sessionId].startTime)} - {formatTime(officeHours[sessionId].endTime)}
+                              {officeHours[sessionId].startTime} - {officeHours[sessionId].endTime}
                             </Typography>
                           </Grid>
                           <Grid item xs={6}>
