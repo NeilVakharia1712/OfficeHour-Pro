@@ -16,11 +16,12 @@ const crowdedness = [0, 1, 2, 3];
 const description = ['Empty', 'Little Crowded', 'Moderate Crowded', 'Very Crowded'];
 const level = [<SentimentSatisfiedAltIcon />, <SentimentSatisfiedIcon />, <SentimentDissatisfiedIcon />, <SentimentVeryDissatisfiedIcon />]
 
-const FeedBackSelector = ({ feedbackOpen, setFeedbackOpen, user, courseNumber }) => {
+const FeedBackSelector = ({ feedbackOpen, setFeedbackOpen, user, courseNumber, setMessageOpen }) => {
 
     const handleListItemClick = crowd => {
         CheckIn(user, courseNumber, crowd)
         setFeedbackOpen(false)
+        setMessageOpen(true)
     };
 
     const CheckIn = (user, courseNumber, level) => {
