@@ -14,6 +14,7 @@ const SignOut = () => {
 const SignInWithGoogle = () => {
     let provider = new firebase.auth.GoogleAuthProvider();
     firebase.auth().signInWithPopup(provider);
+    console.log("llogged")
 }
 
 export default SignIn;

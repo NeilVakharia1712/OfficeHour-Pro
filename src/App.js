@@ -35,6 +35,7 @@ const App = () => {
 	useEffect(() => {
 		const getCourseInfo = snapshot => {
 			if (snapshot.val()) setSchedule(snapshot.val());
+			console.log("hello")
 		}
 		const courseDb = firebase.database().ref('courses');
 		courseDb.on("value", getCourseInfo, error => alert(error));
@@ -51,6 +52,7 @@ const App = () => {
 			const updateUserCourse = (snapshot) => {
 				if (snapshot.val()) {
 					setCourse(snapshot.val().courses)
+					console.log(snapshot.val())
 					setCheckedInCourse(snapshot.val().checkedInCourse);
 				}
 				else{

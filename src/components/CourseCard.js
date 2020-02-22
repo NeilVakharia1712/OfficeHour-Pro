@@ -113,6 +113,7 @@ const CourseCard = ({
     const nums = []
     const dbRef = firebase.database().ref("courses/" + courseNumber + "/officeHours/CheckedInUsers");
     dbRef.orderByChild("time").limitToLast(3).on("child_added", snapshot => {
+      console.log(snapshot.val())
       nums.push(snapshot.val().level)
     });
     console.log(nums)
